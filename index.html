@@ -1,327 +1,191 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IAM Sentinel – Lead Intelligence Dashboard</title>
-  <!-- TailwindCSS CDN (v3) -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <script>
-    /* --- Tailwind dark-mode setup (class strategy) --- */
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            sentinel: {
-              DEFAULT: '#1C64F2',     /* IAM brand blue – tweak as desired */
-              dark: '#1A4ABF'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IAM Sentinel – Lead Dashboard</title>
 
-  <!-- Tabulator -->
-  <link href="https://unpkg.com/tabulator-tables@5.6/dist/css/tabulator.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/tabulator-tables@5.6/dist/js/tabulator.min.js"></script>
-  <!-- pdfmake (for Tabulator PDF export) -->
+  <!-- TailwindCSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class'}</script>
+
+  <!-- jQuery & DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css"/>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables Buttons (PDF export) -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css"/>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <!-- Feather icons (lightweight) -->
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+  <!-- Feather icons -->
   <script src="https://unpkg.com/feather-icons"></script>
-  <!-- Leaflet (heat-map / circles) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Day.js for date parsing -->
-  <script src="https://unpkg.com/dayjs@1/dayjs.min.js"></script>
+
   <style>
-    /* Let Tabulator fill flex container */
-    #client-table, #tender-table, #ot-table { height: 60vh; }
+    /* Override DataTables colours for dark mode */
+    html.dark table.dataTable tbody tr { background-color:#1f2937; color:#d1d5db; }
+    html.dark table.dataTable thead { background-color:#374151; color:white; }
+    html.dark table.dataTable { border-color:#4b5563; }
   </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex h-screen overflow-hidden">
-  <!-- ============== Sidebar ============== -->
-  <aside id="sidebar" class="w-72 shrink-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
-    <!-- Brand -->
-    <div class="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sentinel" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /></svg>
-      <span class="font-semibold text-lg">IAM Sentinel</span>
+<body class="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <!-- ============= Sidebar ============= -->
+  <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col p-4 space-y-6">
+    <!-- Brand + collapse btn -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
+        <span class="font-semibold">IAM&nbsp;Sentinel</span>
+      </div>
+      <button id="toggle-dark" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i data-feather="moon"></i></button>
     </div>
 
     <!-- Filters -->
-    <div class="flex-1 overflow-y-auto p-4 space-y-6">
-      <!-- Region filter -->
-      <div>
-        <label class="block mb-1 text-sm font-medium">Region</label>
-        <select id="filter-region" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" multiple>
-          <!-- options injected -->
-        </select>
-      </div>
-      <!-- Type filter -->
-      <div>
-        <label class="block mb-1 text-sm font-medium">Provider Type</label>
-        <select id="filter-type" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" multiple>
-          <option>Support At Home Program Provider</option>
-          <option>NDIS</option>
-          <option>Other</option>
-        </select>
-      </div>
+    <div>
+      <h2 class="font-semibold mb-2">Filters</h2>
+      <label class="block text-sm mb-1" for="regionSelect">Region</label>
+      <select id="regionSelect" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 mb-4"></select>
 
-      <!-- Search -->
-      <div>
-        <label class="block mb-1 text-sm font-medium">Search name / rationale</label>
-        <input id="filter-search" type="search" placeholder="Search…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" />
-      </div>
+      <label class="block text-sm mb-1" for="typeSelect">Provider Type</label>
+      <select id="typeSelect" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 mb-4">
+        <option>Support At Home Program Provider</option>
+        <option>NDIS</option>
+        <option>Other</option>
+      </select>
 
-      <button id="filter-reset" class="px-3 py-2 w-full bg-gray-200 dark:bg-gray-700 rounded text-sm">Reset filters</button>
-
-      <hr class="border-gray-200 dark:border-gray-700"/>
-
-      <!-- Dark-mode toggle -->
-      <button id="toggle-dark" class="flex items-center gap-2 text-sm px-3 py-2 w-full rounded bg-sentinel/10 dark:bg-sentinel.dark/20">
-        <i data-feather="moon"></i>
-        <span>Toggle dark mode</span>
-      </button>
+      <label class="block text-sm mb-1" for="searchInput">Search</label>
+      <input id="searchInput" type="search" placeholder="Name / rationale…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"/>
+      <button id="resetBtn" class="mt-3 w-full px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-sm">Reset</button>
     </div>
+
+    <div class="mt-auto text-xs opacity-70">© 2025 In A Minnit</div>
   </aside>
 
-  <!-- ============== Main content ============== -->
-  <main class="flex-1 flex flex-col overflow-hidden">
-    <!-- KPI bar -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-      <div class="p-4 rounded bg-sentinel/10 dark:bg-sentinel.dark/20">
-        <div class="text-sm">New Potential Clients</div>
-        <div id="kpi-clients" class="text-3xl font-semibold">–</div>
+  <!-- ============= Main content ============= -->
+  <main class="flex-1 overflow-y-auto p-6 space-y-10">
+
+    <!-- KPI tiles -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="p-4 rounded bg-blue-500/10 dark:bg-blue-400/20">
+        <div class="text-sm">New Clients</div>
+        <div id="kpiClients" class="text-3xl font-semibold">–</div>
       </div>
-      <div class="p-4 rounded bg-emerald-500/10 dark:bg-emerald-400/20">
-        <div class="text-sm">Tenders closing ≤ 14 days</div>
-        <div id="kpi-tenders" class="text-3xl font-semibold">–</div>
+      <div class="p-4 rounded bg-amber-500/10 dark:bg-amber-400/20">
+        <div class="text-sm">Tenders ≤ 14 days</div>
+        <div id="kpiTenders" class="text-3xl font-semibold">–</div>
       </div>
       <div class="p-4 rounded bg-purple-500/10 dark:bg-purple-400/20">
         <div class="text-sm">OT Practices</div>
-        <div id="kpi-ot" class="text-3xl font-semibold">–</div>
+        <div id="kpiOT" class="text-3xl font-semibold">–</div>
       </div>
     </section>
 
-    <!-- Map -->
-    <section class="p-4">
-      <h2 class="font-semibold mb-2">Client Distribution Map</h2>
-      <div id="map" class="w-full h-72 rounded shadow"></div>
+    <!-- Sections -->
+    <section>
+      <h2 class="font-semibold text-lg mb-3">New Potential Clients</h2>
+      <table id="clientTable" class="display w-full"></table>
     </section>
 
-    <!-- Tables tabs -->
-    <section class="p-4 flex flex-col gap-6 overflow-y-auto">
-      <!-- New potential clients table -->
-      <div>
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="font-semibold text-lg">New Potential Clients</h2>
-          <div class="flex gap-2">
-            <button id="btn-download-clients" class="text-sm px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700">Export PDF</button>
-          </div>
-        </div>
-        <div id="client-table" class="rounded shadow border border-gray-200 dark:border-gray-700"></div>
-      </div>
+    <section>
+      <h2 class="font-semibold text-lg mb-3">Tender Opportunities</h2>
+      <table id="tenderTable" class="display w-full"></table>
+    </section>
 
-      <!-- Tender opportunities table -->
-      <div>
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="font-semibold text-lg">Tender Opportunities</h2>
-          <button id="btn-download-tenders" class="text-sm px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700">Export PDF</button>
-        </div>
-        <div id="tender-table" class="rounded shadow border border-gray-200 dark:border-gray-700"></div>
-      </div>
-
-      <!-- OT practices table -->
-      <div>
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="font-semibold text-lg">OT Practices</h2>
-          <button id="btn-download-ot" class="text-sm px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700">Export PDF</button>
-        </div>
-        <div id="ot-table" class="rounded shadow border border-gray-200 dark:border-gray-700"></div>
-      </div>
+    <section class="pb-10">
+      <h2 class="font-semibold text-lg mb-3">OT Practices</h2>
+      <table id="otTable" class="display w-full"></table>
     </section>
   </main>
 
-  <!-- ============== Main script ============== -->
+  <!-- ============= Script ============= -->
   <script>
-    feather.replace(); // load icons
+    feather.replace();
 
-    /* ---- Dark mode toggle ---- */
-    const darkToggle = document.getElementById('toggle-dark');
-    darkToggle.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('iam-dark', document.documentElement.classList.contains('dark'));
+    /* Dark mode persistence */
+    const root=document.documentElement; const darkPref=localStorage.getItem('iam-dark'); if(darkPref==='true') root.classList.add('dark');
+    document.getElementById('toggle-dark').onclick=()=>{root.classList.toggle('dark'); localStorage.setItem('iam-dark',root.classList.contains('dark'))};
+
+    /* Helper to parse states */
+    const extractStates=str=>str.match(/[A-Z]{2,3}/g)||[];
+
+    /* Load data.json */
+    fetch('data.json').then(r=>r.json()).then(data=>{
+      const clients=data.NewPotentialClients; const tenders=data.TenderOpportunities; const ots=data.OTPractices;
+
+      /* KPI counts */
+      $('#kpiClients').text(clients.length);
+      $('#kpiOT').text(ots.length);
+      const soon=tenders.filter(t=>{const diff=(new Date(t.CloseDate)-Date.now())/864e5; return diff<=14}).length; $('#kpiTenders').text(soon);
+
+      /* Populate region filter */
+      const regionSet=new Set(); clients.forEach(c=>extractStates(c.Region).forEach(s=>regionSet.add(s))); regionSet.forEach(s=>$('#regionSelect').append(`<option>${s}</option>`));
+
+      /* Build DataTables */
+      const clientTable=$('#clientTable').DataTable({
+        data:clients,
+        dom:'Bfrtip',
+        buttons:['pdfHtml5'],
+        columns:[
+          {title:'Provider',data:'ProviderName'},
+          {title:'Type',data:'Type'},
+          {title:'Region',data:'Region'},
+          {title:'Est. Clients',data:'EstimatedClients'},
+          {title:'Decision Maker',data:null,render:d=>`${d.DecisionMaker.Name}<br><span class='text-xs opacity-70'>${d.DecisionMaker.Title}</span>`},
+          {title:'Contact',data:null,orderable:false,render:d=>{
+            const tel=d.DecisionMaker.Phone?`<a href='tel:${d.DecisionMaker.Phone.replace(/\s/g,'')}' class='mr-1 underline'>📞</a>`:'';
+            const mail=d.DecisionMaker.Email?`<a href='mailto:${d.DecisionMaker.Email}' class='mr-1 underline'>✉️</a>`:'';
+            const li=d.DecisionMaker.LinkedIn?`<a href='${d.DecisionMaker.LinkedIn}' target='_blank' class='underline'>in</a>`:'';
+            return tel+mail+li;
+          }},
+          {title:'Rationale',data:'Rationale'},
+          {title:'Sources',data:'Sources',orderable:false,render:a=>a.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')}
+        ]
+      });
+
+      const tenderTable=$('#tenderTable').DataTable({
+        data:tenders,
+        dom:'Bfrtip',buttons:['pdfHtml5'],
+        columns:[
+          {title:'Title',data:'Title'},
+          {title:'Buyer',data:'Buyer'},
+          {title:'Close',data:'CloseDate'},
+          {title:'Category',data:'Relevance'},
+          {title:'Link',data:'Link',render:u=>`<a href='${u}' target='_blank' class='underline'>open</a>`},
+          {title:'Sources',data:'Sources',render:a=>a.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')}
+        ]
+      });
+
+      const otTable=$('#otTable').DataTable({
+        data:ots,
+        dom:'Bfrtip',buttons:['pdfHtml5'],
+        columns:[
+          {title:'Practice',data:'PracticeName'},
+          {title:'Region',data:'Region'},
+          {title:'OTs',data:'OTCount'},
+          {title:'Email',data:'Contact.Email',render:e=>e?`<a href='mailto:${e}' class='underline'>${e}</a>`:''},
+          {title:'Phone',data:'Contact.Phone'},
+          {title:'Sources',data:'Sources',render:a=>a.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')}
+        ]
+      });
+
+      /* External filter logic */
+      const applyFilters=()=>{
+        const regions=$('#regionSelect').val()||[]; const types=$('#typeSelect').val()||[]; const search=$('#searchInput').val().toLowerCase();
+        clientTable.draw(); // triggers the search plugin below
+      };
+      $.fn.dataTable.ext.search.push((settings,data,idx,row)=>{
+        if(settings.nTable.id!=='clientTable') return true; // only clients
+        const regions=$('#regionSelect').val()||[]; const types=$('#typeSelect').val()||[]; const search=$('#searchInput').val().toLowerCase();
+        const regionOk=!regions.length||regions.some(r=>row.Region.includes(r));
+        const typeOk=!types.length||types.includes(row.Type);
+        const searchOk=!search||row.ProviderName.toLowerCase().includes(search)||row.Rationale.toLowerCase().includes(search);
+        return regionOk&&typeOk&&searchOk;
+      });
+      $('#regionSelect,#typeSelect').on('change',applyFilters); $('#searchInput').on('input',applyFilters);
+      $('#resetBtn').on('click',()=>{$('#regionSelect option:selected,#typeSelect option:selected').prop('selected',false);$('#searchInput').val('');applyFilters();});
     });
-    if (localStorage.getItem('iam-dark') === 'true') document.documentElement.classList.add('dark');
-
-    /* ---- State coordinate helper (rough centroids) ---- */
-    const stateCoords = { 'VIC': [-37.0, 144.0], 'NSW': [-33.0, 147.0], 'QLD': [-22.5, 145.0], 'SA': [-30.0, 135.0], 'WA': [-25.0, 121.0], 'TAS': [-42.0, 147.0], 'ACT': [-35.4, 149.1], 'NT': [-19.0, 133.0] };
-
-    /* ---- Leaflet map ---- */
-    const map = L.map('map', { scrollWheelZoom:false }).setView([-25, 134], 4);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
-    let mapLayerGroup = L.layerGroup().addTo(map);
-
-    function refreshMap(clients){
-      mapLayerGroup.clearLayers();
-      clients.forEach(c => {
-        const stateMatch = c.Region.match(/[A-Z]{2,3}/);
-        if(!stateMatch) return;
-        const coord = stateCoords[stateMatch[0].trim()];
-        if(!coord) return;
-        const est = parseInt(c.EstimatedClients) || 50;
-        L.circleMarker(coord, {
-          radius: 4 + Math.sqrt(est)/5,
-          fillColor: '#3b82f6',
-          color: '#1e40af',
-          weight: 1,
-          fillOpacity: 0.6
-        }).bindPopup(`<strong>${c.ProviderName}</strong><br>${c.Region}<br>Est. ${c.EstimatedClients}`).addTo(mapLayerGroup);
-      });
-    }
-
-    /* ---- Load data ---- */
-    fetch('data.json')
-      .then(r => r.json())
-      .then(data => {
-        const clientsRaw = data.NewPotentialClients;
-        const tendersRaw = data.TenderOpportunities;
-        const otRaw = data.OTPractices;
-
-        /* --- KPI widgets --- */
-        document.getElementById('kpi-clients').textContent = clientsRaw.length;
-        document.getElementById('kpi-ot').textContent = otRaw.length;
-        const soonCount = tendersRaw.filter(t => {
-          const d = dayjs(t.CloseDate, 'DD MMM YYYY');
-          return d.diff(dayjs(), 'day') <= 14;
-        }).length;
-        document.getElementById('kpi-tenders').textContent = soonCount;
-
-        /* --- Region dropdown options --- */
-        const regionSet = new Set(clientsRaw.flatMap(c => c.Region.split(/[,&]/).map(s => s.trim().match(/[A-Z]{2,3}/)?.[0]).filter(Boolean)));
-        const regionSelect = document.getElementById('filter-region');
-        [...regionSet].sort().forEach(state => {
-          const opt = document.createElement('option');
-          opt.value = state;
-          opt.textContent = state;
-          regionSelect.appendChild(opt);
-        });
-
-        /* ---- Filter logic ---- */
-        const filters = { region:[], type:[], search:'' };
-        regionSelect.addEventListener('change', ()=>{
-          filters.region = Array.from(regionSelect.selectedOptions).map(o=>o.value);
-          tableFilter();
-        });
-        const typeSelect = document.getElementById('filter-type');
-        typeSelect.addEventListener('change', ()=>{
-          filters.type = Array.from(typeSelect.selectedOptions).map(o=>o.value);
-          tableFilter();
-        });
-        document.getElementById('filter-search').addEventListener('input', e => {
-          filters.search = e.target.value.toLowerCase();
-          tableFilter();
-        });
-        document.getElementById('filter-reset').addEventListener('click', () => {
-          regionSelect.selectedIndex = -1; typeSelect.selectedIndex = -1; document.getElementById('filter-search').value='';
-          filters.region=[]; filters.type=[]; filters.search='';
-          tableFilter();
-        });
-
-        /* ---- Tabulator tables ---- */
-        const clientTable = new Tabulator('#client-table', {
-          layout:"fitColumns",
-          data: clientsRaw,
-          pagination:"local",
-          paginationSize:10,
-          columns:[
-            {title:"Provider", field:"ProviderName", headerFilter:"input"},
-            {title:"Type", field:"Type"},
-            {title:"Region", field:"Region"},
-            {title:"Estimated", field:"EstimatedClients", sorter:"number"},
-            {title:"Contact", formatter:(cell)=>{
-              const person = cell.getRow().getData().DecisionMaker;
-              return `<div class='flex flex-col'>${person.Name}<span class='text-xs opacity-70'>${person.Title}</span></div>`;
-            }},
-            {title:"Phone", formatter:(cell)=>{
-              const phone = cell.getRow().getData().DecisionMaker.Phone || '';
-              return phone ? `<a href='tel:${phone.replace(/\s/g,'')}' title='Click to call'>📞</a>` : '';
-            }, width:60, hozAlign:'center'},
-            {title:"Email", formatter:(cell)=>{
-              const email = cell.getRow().getData().DecisionMaker.Email || '';
-              return email ? `<a href='mailto:${email}' title='Email'>✉️</a>` : '';
-            }, width:60, hozAlign:'center'},
-          ],
-          rowFormatter:function(row){
-            const holder = document.createElement('div');
-            holder.classList.add('p-2','bg-gray-50','dark:bg-gray-800');
-            const data = row.getData();
-            holder.innerHTML = `<div class='text-sm mb-1'><strong>Rationale:</strong> ${data.Rationale}</div>` +
-              `<div class='text-xs italic'>Sources: ${data.Sources.map(u=>`<a href='${u}' target='_blank' class='underline text-sentinel'>link</a>`).join(', ')}</div>`;
-            row.getElement().appendChild(holder);
-          }
-        });
-
-        const tenderTable = new Tabulator('#tender-table', {
-          layout:"fitColumns",
-          data:tendersRaw,
-          pagination:"local",
-          paginationSize:5,
-          columns:[
-            {title:"Title", field:"Title", widthGrow:2},
-            {title:"Buyer", field:"Buyer"},
-            {title:"Close", field:"CloseDate", sorter:(a,b)=>dayjs(a,'DD MMM YYYY').toDate()-dayjs(b,'DD MMM YYYY').toDate(), formatter:(cell)=>{
-              const days = dayjs(cell.getValue(),'DD MMM YYYY').diff(dayjs(),'day');
-              const badge = days<=3?'bg-red-500':days<=10?'bg-amber-400':'bg-emerald-500';
-              return `<span class='px-2 py-0.5 rounded text-xs text-white ${badge}'>${cell.getValue()}</span>`;
-            }},
-            {title:"Category", field:"Relevance"},
-            {title:"Link", formatter:(cell)=>`<a href='${cell.getRow().getData().Link}' target='_blank' class='underline text-sentinel'>Open</a>`, width:70}
-          ]
-        });
-
-        const otTable = new Tabulator('#ot-table', {
-          layout:"fitColumns",
-          data:otRaw,
-          pagination:"local",
-          paginationSize:5,
-          columns:[
-            {title:"Practice", field:"PracticeName", widthGrow:2},
-            {title:"Region", field:"Region"},
-            {title:"OTs", field:"OTCount", sorter:"number"},
-            {title:"Email", formatter:(cell)=>{
-              const e=cell.getRow().getData().Contact.Email; return e?`<a href='mailto:${e}' class='underline'>${e}</a>`:'';}, widthGrow:2},
-            {title:"Phone", formatter:(cell)=>cell.getRow().getData().Contact.Phone||''}
-          ]
-        });
-
-        /* ---- Filtering function applied to client table ---- */
-        function tableFilter(){
-          clientTable.clearFilter();
-          if(filters.region.length){
-            clientTable.addFilter("Region", "like", filters.region.map(r=>r).join("|"), { regex:true });
-          }
-          if(filters.type.length){
-            clientTable.addFilter("Type", "in", filters.type);
-          }
-          if(filters.search){
-            clientTable.addFilter([ // OR filters
-              {field:"ProviderName", type:"like", value:filters.search},
-              {field:"Rationale", type:"like", value:filters.search}
-            ], "or");
-          }
-          refreshMap(clientTable.getData());
-        }
-        tableFilter();
-
-        /* ---- Export buttons ---- */
-        document.getElementById('btn-download-clients').addEventListener('click', ()=>clientTable.download('pdf','clients.pdf', { orientation:'landscape', title:'IAM Sentinel – Clients'}));
-        document.getElementById('btn-download-tenders').addEventListener('click', ()=>tenderTable.download('pdf','tenders.pdf', { title:'IAM Sentinel – Tenders'}));
-        document.getElementById('btn-download-ot').addEventListener('click', ()=>otTable.download('pdf','ot-practices.pdf', { title:'IAM Sentinel – OT Practices'}));
-
-      });
   </script>
 </body>
 </html>
