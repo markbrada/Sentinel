@@ -1,191 +1,226 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IAM Sentinel – Lead Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IAM Sentinel – Leads Explorer</title>
 
-  <!-- TailwindCSS (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <script>tailwind.config={darkMode:'class'}</script>
-
-  <!-- jQuery & DataTables -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css"/>
-  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-  <!-- DataTables Buttons (PDF export) -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css"/>
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 
   <!-- Feather icons -->
   <script src="https://unpkg.com/feather-icons"></script>
 
+  <!-- html2pdf for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   <style>
-    /* Override DataTables colours for dark mode */
-    html.dark table.dataTable tbody tr { background-color:#1f2937; color:#d1d5db; }
-    html.dark table.dataTable thead { background-color:#374151; color:white; }
-    html.dark table.dataTable { border-color:#4b5563; }
+    /* Smooth dark-mode transition */
+    *{transition:background-color .2s ease,color .2s ease;}
+    ::selection{background:#3b82f6; color:white;}
+    summary::-webkit-details-marker{display:none;}
   </style>
 </head>
-<body class="flex h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-  <!-- ============= Sidebar ============= -->
-  <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col p-4 space-y-6">
-    <!-- Brand + collapse btn -->
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
-        <span class="font-semibold">IAM&nbsp;Sentinel</span>
-      </div>
-      <button id="toggle-dark" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i data-feather="moon"></i></button>
+<body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <!--============== Top bar ==============-->
+  <nav class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+    <div class="flex items-center gap-2 text-lg font-semibold">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
+      IAM&nbsp;Sentinel
     </div>
-
-    <!-- Filters -->
-    <div>
-      <h2 class="font-semibold mb-2">Filters</h2>
-      <label class="block text-sm mb-1" for="regionSelect">Region</label>
-      <select id="regionSelect" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 mb-4"></select>
-
-      <label class="block text-sm mb-1" for="typeSelect">Provider Type</label>
-      <select id="typeSelect" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 mb-4">
-        <option>Support At Home Program Provider</option>
-        <option>NDIS</option>
-        <option>Other</option>
-      </select>
-
-      <label class="block text-sm mb-1" for="searchInput">Search</label>
-      <input id="searchInput" type="search" placeholder="Name / rationale…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"/>
-      <button id="resetBtn" class="mt-3 w-full px-3 py-2 rounded bg-gray-200 dark:bg-gray-700 text-sm">Reset</button>
+    <div class="flex items-center gap-4 text-sm">
+      <button id="downloadPdf" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"><i data-feather="download" class="w-4"></i><span>Export PDF</span></button>
+      <button id="toggleDark" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i data-feather="moon"></i></button>
     </div>
+  </nav>
 
-    <div class="mt-auto text-xs opacity-70">© 2025 In A Minnit</div>
-  </aside>
+  <!--============== KPI tiles ==============-->
+  <section class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="rounded-lg p-4 bg-blue-500/10 dark:bg-blue-400/20">
+      <div class="text-sm">New Clients</div>
+      <div id="kpiClients" class="text-3xl font-semibold">–</div>
+    </div>
+    <div class="rounded-lg p-4 bg-amber-500/10 dark:bg-amber-400/20">
+      <div class="text-sm">Tenders ≤ 14 days</div>
+      <div id="kpiTenders" class="text-3xl font-semibold">–</div>
+    </div>
+    <div class="rounded-lg p-4 bg-purple-500/10 dark:bg-purple-400/20">
+      <div class="text-sm">OT Practices</div>
+      <div id="kpiOT" class="text-3xl font-semibold">–</div>
+    </div>
+  </section>
 
-  <!-- ============= Main content ============= -->
-  <main class="flex-1 overflow-y-auto p-6 space-y-10">
-
-    <!-- KPI tiles -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="p-4 rounded bg-blue-500/10 dark:bg-blue-400/20">
-        <div class="text-sm">New Clients</div>
-        <div id="kpiClients" class="text-3xl font-semibold">–</div>
+  <!--============== Filters ==============-->
+  <section class="px-4 space-y-4 max-w-screen-lg mx-auto">
+    <h2 class="font-semibold text-lg">Filter New Clients</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm mb-1" for="regionFilter">Region</label>
+        <select id="regionFilter" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 h-28"></select>
       </div>
-      <div class="p-4 rounded bg-amber-500/10 dark:bg-amber-400/20">
-        <div class="text-sm">Tenders ≤ 14 days</div>
-        <div id="kpiTenders" class="text-3xl font-semibold">–</div>
+      <div>
+        <label class="block text-sm mb-1" for="typeFilter">Provider Type</label>
+        <select id="typeFilter" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 h-28">
+          <option>Support At Home Program Provider</option>
+          <option>NDIS</option>
+          <option>Other</option>
+        </select>
       </div>
-      <div class="p-4 rounded bg-purple-500/10 dark:bg-purple-400/20">
-        <div class="text-sm">OT Practices</div>
-        <div id="kpiOT" class="text-3xl font-semibold">–</div>
+      <div>
+        <label class="block text-sm mb-1" for="searchBox">Search</label>
+        <input id="searchBox" type="search" placeholder="Name or rationale…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" />
+        <button id="resetBtn" class="mt-2 px-3 py-1.5 w-full rounded bg-gray-200 dark:bg-gray-700 text-sm">Reset</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Sections -->
-    <section>
-      <h2 class="font-semibold text-lg mb-3">New Potential Clients</h2>
-      <table id="clientTable" class="display w-full"></table>
-    </section>
+  <!--============== Clients grid ==============-->
+  <section class="px-4 py-8 max-w-screen-lg mx-auto">
+    <div id="clientGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </section>
 
-    <section>
-      <h2 class="font-semibold text-lg mb-3">Tender Opportunities</h2>
-      <table id="tenderTable" class="display w-full"></table>
-    </section>
+  <!--============== Tenders ==============-->
+  <section class="px-4 py-6 bg-gray-100 dark:bg-gray-800/40">
+    <div class="max-w-screen-lg mx-auto">
+      <h2 class="font-semibold text-lg mb-4">Tender Opportunities</h2>
+      <div id="tenderList" class="space-y-4"></div>
+    </div>
+  </section>
 
-    <section class="pb-10">
-      <h2 class="font-semibold text-lg mb-3">OT Practices</h2>
-      <table id="otTable" class="display w-full"></table>
-    </section>
-  </main>
+  <!--============== OT Practices ==============-->
+  <section class="px-4 py-6 max-w-screen-lg mx-auto">
+    <h2 class="font-semibold text-lg mb-4">OT Practices</h2>
+    <div id="otGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </section>
 
-  <!-- ============= Script ============= -->
+  <footer class="text-center text-xs py-4 opacity-70">© 2025 In A Minnit</footer>
+
+  <!--============== Script ==============-->
   <script>
     feather.replace();
 
-    /* Dark mode persistence */
-    const root=document.documentElement; const darkPref=localStorage.getItem('iam-dark'); if(darkPref==='true') root.classList.add('dark');
-    document.getElementById('toggle-dark').onclick=()=>{root.classList.toggle('dark'); localStorage.setItem('iam-dark',root.classList.contains('dark'))};
+    /* Dark-mode persistence */
+    const root=document.documentElement; const darkStored=localStorage.getItem('iam-dark'); if(darkStored==='true') root.classList.add('dark');
+    document.getElementById('toggleDark').onclick=()=>{root.classList.toggle('dark'); localStorage.setItem('iam-dark',root.classList.contains('dark'))};
 
-    /* Helper to parse states */
-    const extractStates=str=>str.match(/[A-Z]{2,3}/g)||[];
+    /* Data holders */
+    let clients=[], tenders=[], ots=[];
 
-    /* Load data.json */
-    fetch('data.json').then(r=>r.json()).then(data=>{
-      const clients=data.NewPotentialClients; const tenders=data.TenderOpportunities; const ots=data.OTPractices;
+    /* Helpers */
+    const qs=(sel,par=document)=>par.querySelector(sel);
+    const qsa=(sel,par=document)=>[...par.querySelectorAll(sel)];
+    const getProp=(obj,...keys)=>keys.find(k=>k in obj)&&obj[keys.find(k=>k in obj)];
+    const stateRegex=/[A-Z]{2,3}/g;
 
-      /* KPI counts */
-      $('#kpiClients').text(clients.length);
-      $('#kpiOT').text(ots.length);
-      const soon=tenders.filter(t=>{const diff=(new Date(t.CloseDate)-Date.now())/864e5; return diff<=14}).length; $('#kpiTenders').text(soon);
-
-      /* Populate region filter */
-      const regionSet=new Set(); clients.forEach(c=>extractStates(c.Region).forEach(s=>regionSet.add(s))); regionSet.forEach(s=>$('#regionSelect').append(`<option>${s}</option>`));
-
-      /* Build DataTables */
-      const clientTable=$('#clientTable').DataTable({
-        data:clients,
-        dom:'Bfrtip',
-        buttons:['pdfHtml5'],
-        columns:[
-          {title:'Provider',data:'ProviderName'},
-          {title:'Type',data:'Type'},
-          {title:'Region',data:'Region'},
-          {title:'Est. Clients',data:'EstimatedClients'},
-          {title:'Decision Maker',data:null,render:d=>`${d.DecisionMaker.Name}<br><span class='text-xs opacity-70'>${d.DecisionMaker.Title}</span>`},
-          {title:'Contact',data:null,orderable:false,render:d=>{
-            const tel=d.DecisionMaker.Phone?`<a href='tel:${d.DecisionMaker.Phone.replace(/\s/g,'')}' class='mr-1 underline'>📞</a>`:'';
-            const mail=d.DecisionMaker.Email?`<a href='mailto:${d.DecisionMaker.Email}' class='mr-1 underline'>✉️</a>`:'';
-            const li=d.DecisionMaker.LinkedIn?`<a href='${d.DecisionMaker.LinkedIn}' target='_blank' class='underline'>in</a>`:'';
-            return tel+mail+li;
-          }},
-          {title:'Rationale',data:'Rationale'},
-          {title:'Sources',data:'Sources',orderable:false,render:a=>a.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')}
-        ]
+    /* Render functions */
+    function renderClients(){
+      const regionSel=[...qs('#regionFilter').selectedOptions].map(o=>o.value);
+      const typeSel=[...qs('#typeFilter').selectedOptions].map(o=>o.value);
+      const term=qs('#searchBox').value.toLowerCase();
+      const grid=qs('#clientGrid'); grid.innerHTML='';
+      clients.filter(c=>{
+        const regionMatch=!regionSel.length||regionSel.some(r=>c.Region.includes(r));
+        const typeMatch=!typeSel.length||typeSel.includes(c.Type);
+        const searchMatch=!term||c.ProviderName.toLowerCase().includes(term)||c.Rationale.toLowerCase().includes(term);
+        return regionMatch&&typeMatch&&searchMatch;
+      }).forEach(c=>{
+        const est=getProp(c,'EstimatedClients','EstimatedClientCount','EstimatedClient');
+        const card=document.createElement('article');
+        card.className='rounded-lg shadow bg-white dark:bg-gray-800 flex flex-col';
+        card.innerHTML=`
+          <div class='p-4 flex-1 flex flex-col'>
+            <h3 class='font-semibold mb-1'>${c.ProviderName}</h3>
+            <div class='text-xs mb-2 opacity-70'>${c.Type} · ${c.Region}</div>
+            <div class='text-sm mb-4'>Est. clients: <span class='font-medium'>${est||'n/a'}</span></div>
+            <p class='text-sm flex-1'>${c.Rationale}</p>
+          </div>
+          <details class='border-t border-gray-200 dark:border-gray-700'>
+            <summary class='px-4 py-2 cursor-pointer select-none flex items-center gap-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700'>Contact & sources<i data-feather='chevron-down' class='w-4'></i></summary>
+            <div class='px-4 py-3 text-sm space-y-2'>
+              <div><span class='font-medium'>${c.DecisionMaker.Name}</span> · ${c.DecisionMaker.Title}</div>
+              <div class='flex gap-2'>
+                ${c.DecisionMaker.Phone?`<a href='tel:${c.DecisionMaker.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>Call</a>`:''}
+                ${c.DecisionMaker.Email?`<a href='mailto:${c.DecisionMaker.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>Email</a>`:''}
+                ${c.DecisionMaker.LinkedIn?`<a href='${c.DecisionMaker.LinkedIn}' target='_blank' class='underline flex items-center gap-1'><i data-feather='linkedin' class='w-4'></i>LinkedIn</a>`:''}
+              </div>
+              <div>Sources: ${getProp(c,'Sources','SourceURLs',"source")?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>
+            </div>
+          </details>`;
+        grid.appendChild(card);
       });
+      feather.replace(); // refresh icons inside new nodes
+    }
 
-      const tenderTable=$('#tenderTable').DataTable({
-        data:tenders,
-        dom:'Bfrtip',buttons:['pdfHtml5'],
-        columns:[
-          {title:'Title',data:'Title'},
-          {title:'Buyer',data:'Buyer'},
-          {title:'Close',data:'CloseDate'},
-          {title:'Category',data:'Relevance'},
-          {title:'Link',data:'Link',render:u=>`<a href='${u}' target='_blank' class='underline'>open</a>`},
-          {title:'Sources',data:'Sources',render:a=>a.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')}
-        ]
+    function renderTenders(){
+      const wrap=qs('#tenderList'); wrap.innerHTML='';
+      tenders.forEach(t=>{
+        const days=Math.ceil((new Date(t.CloseDate)-Date.now())/864e5);
+        const badge=days<=3?'bg-red-600':days<=10?'bg-amber-500':'bg-emerald-600';
+        const card=document.createElement('article');
+        card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
+        card.innerHTML=`
+          <h3 class='font-semibold mb-1'>${t.Title}</h3>
+          <div class='text-xs mb-2 opacity-70'>${t.Buyer}</div>
+          <div class='flex items-center gap-2 text-sm mb-3'>
+            <span class='px-2 py-0.5 rounded text-white ${badge}'>Closes ${t.CloseDate}</span>
+            <span class='opacity-80'>${t.Relevance||t.CategoryCode||''}</span>
+          </div>
+          <p class='text-sm mb-3'>${t.Description||''}</p>
+          <div class='flex gap-4'>
+            <a href='${getProp(t,'Link','TenderLink')}' target='_blank' class='underline flex items-center gap-1'><i data-feather='external-link' class='w-4'></i>Open</a>
+            <span class='text-xs'>Sources: ${getProp(t,'Sources','SourceURLs')?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</span>
+          </div>`;
+        wrap.appendChild(card);
       });
+      feather.replace();
+    }
 
-      const otTable=$('#otTable').DataTable({
-        data:ots,
-        dom:'Bfrtip',buttons:['pdfHtml5'],
-        columns:[
-          {title:'Practice',data:'PracticeName'},
-          {title:'Region',data:'Region'},
-          {title:'OTs',data:'OTCount'},
-          {title:'Email',data:'Contact.Email',render:e=>e?`<a href='mailto:${e}' class='underline'>${e}</a>`:''},
-          {title:'Phone',data:'Contact.Phone'},
-          {title:'Sources',data:'Sources',render:a=>a.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')}
-        ]
+    function renderOT(){
+      const grid=qs('#otGrid'); grid.innerHTML='';
+      ots.forEach(o=>{
+        const card=document.createElement('article');
+        card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
+        card.innerHTML=`
+          <h3 class='font-semibold mb-1'>${o.PracticeName}</h3>
+          <div class='text-xs mb-2 opacity-70'>${o.Region}</div>
+          <div class='text-sm mb-3'>OTs: <span class='font-medium'>${o.OTCount}</span></div>
+          <div class='flex flex-col gap-1 text-sm'>
+            ${o.Contact.Phone?`<a href='tel:${o.Contact.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>${o.Contact.Phone}</a>`:''}
+            ${o.Contact.Email?`<a href='mailto:${o.Contact.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>${o.Contact.Email}</a>`:''}
+          </div>
+          <div class='mt-2 text-xs'>Sources: ${o.Sources?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>`;
+        grid.appendChild(card);
       });
+      feather.replace();
+    }
 
-      /* External filter logic */
-      const applyFilters=()=>{
-        const regions=$('#regionSelect').val()||[]; const types=$('#typeSelect').val()||[]; const search=$('#searchInput').val().toLowerCase();
-        clientTable.draw(); // triggers the search plugin below
-      };
-      $.fn.dataTable.ext.search.push((settings,data,idx,row)=>{
-        if(settings.nTable.id!=='clientTable') return true; // only clients
-        const regions=$('#regionSelect').val()||[]; const types=$('#typeSelect').val()||[]; const search=$('#searchInput').val().toLowerCase();
-        const regionOk=!regions.length||regions.some(r=>row.Region.includes(r));
-        const typeOk=!types.length||types.includes(row.Type);
-        const searchOk=!search||row.ProviderName.toLowerCase().includes(search)||row.Rationale.toLowerCase().includes(search);
-        return regionOk&&typeOk&&searchOk;
-      });
-      $('#regionSelect,#typeSelect').on('change',applyFilters); $('#searchInput').on('input',applyFilters);
-      $('#resetBtn').on('click',()=>{$('#regionSelect option:selected,#typeSelect option:selected').prop('selected',false);$('#searchInput').val('');applyFilters();});
+    /* Load JSON */
+    fetch('data.json').then(r=>r.json()).then(d=>{
+      clients=d.NewPotentialClients||[]; tenders=d.TenderOpportunities||[]; ots=d.OTPractices||[];
+
+      // KPI counts
+      qs('#kpiClients').textContent=clients.length;
+      qs('#kpiOT').textContent=ots.length;
+      qs('#kpiTenders').textContent=tenders.filter(t=>((new Date(t.CloseDate)-Date.now())/864e5)<=14).length;
+
+      // Region filter options
+      const regions=[...new Set(clients.flatMap(c=>c.Region.match(stateRegex)||[]))].sort();
+      const regionSelect=qs('#regionFilter'); regions.forEach(r=>{const opt=document.createElement('option'); opt.textContent=opt.value=r; regionSelect.appendChild(opt);});
+
+      renderClients(); renderTenders(); renderOT();
     });
+
+    // Filter events
+    qsa('#regionFilter,#typeFilter').forEach(el=>el.addEventListener('change',renderClients));
+    qs('#searchBox').addEventListener('input',renderClients);
+    qs('#resetBtn').onclick=()=>{qsa('#regionFilter option:selected,#typeFilter option:selected').forEach(o=>o.selected=false); qs('#searchBox').value=''; renderClients();};
+
+    // PDF export (simple print-to-pdf)
+    qs('#downloadPdf').classList.remove('hidden');
+    qs('#downloadPdf').onclick=()=>{
+      html2pdf().from(document.body).set({margin:0.2,filename:'IAM-Sentinel.pdf',html2canvas:{scale:2}}).save();
+    };
   </script>
 </body>
 </html>
