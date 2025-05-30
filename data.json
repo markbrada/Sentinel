@@ -1,1 +1,806 @@
-{}
+{}{
+  "NewPotentialClients": [
+    {
+      "ProviderName": "Australian Unity Home Care Service",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, NSW (National)",
+      "EstimatedClientCount": "Large provider (CHSP funding ~$158.4 M in 2024-25)",
+      "DecisionMaker": {
+        "Name": "Kevin McCoy",
+        "Title": "CEO",
+        "Phone": "1300 160 170",
+        "Email": "customercare@australianunity.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/australian-unity"
+      },
+      "Rationale": "Major national aged care provider (formerly Home Care Service NSW) with extensive client base:contentReference[oaicite:0]{index=0}",
+      "SourceURLs": [
+        "https://www.health.gov.au/sites/default/files/2025-04/commonwealth-home-support-programme-chsp-contracted-providers-and-funding.pdf#page=6:contentReference[oaicite:1]{index=1}",
+        "https://www.australianunity.com.au/assisted-living/home-care"
+      ]
+    },
+    {
+      "ProviderName": "Bolton Clarke (At Home Support)",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, QLD, NSW (National)",
+      "EstimatedClientCount": "Very large provider (thousands of home care package clients)",
+      "DecisionMaker": {
+        "Name": "Stephen Muggleton",
+        "Title": "Group CEO",
+        "Phone": "1300 22 11 22",
+        "Email": "contactus@boltonclarke.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/bolton-clarke"
+      },
+      "Rationale": "Australia’s largest not-for-profit aged care provider (merger of RSL Care + RDNS) with extensive in-home care operations:contentReference[oaicite:2]{index=2}",
+      "SourceURLs": [
+        "https://www.myagedcare.gov.au/find-a-provider/service/bolton-clarke-home-and-community-support-eastern-metro-melbourne:contentReference[oaicite:3]{index=3}",
+        "https://www.boltonclarke.com.au"
+      ]
+    },
+    {
+      "ProviderName": "Benetas Home Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC",
+      "EstimatedClientCount": "~1,500 home care package clients",
+      "DecisionMaker": {
+        "Name": "Sandra Hills OAM",
+        "Title": "CEO",
+        "Phone": "1300 236 382",
+        "Email": "clientservices@benetas.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/benetas"
+      },
+      "Rationale": "Leading Victorian aged care charity with ~1.5k home care clients and high satisfaction ratings:contentReference[oaicite:4]{index=4}",
+      "SourceURLs": [
+        "https://www.linkedin.com/posts/benetas_95-home-care-clients-satisfied-highly-managers-activity-7118921955752273920-9ZRk:contentReference[oaicite:5]{index=5}",
+        "https://www.benetas.com.au/home-care-packages-victoria"
+      ]
+    },
+    {
+      "ProviderName": "Uniting AgeWell",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, TAS",
+      "EstimatedClientCount": "Large (approx 7,000+ home care clients)",
+      "DecisionMaker": {
+        "Name": "Andrew Kinnersly",
+        "Title": "CEO",
+        "Phone": "(03) 9133 5020",
+        "Email": "info@unitingagewell.org",
+        "LinkedIn": "https://www.linkedin.com/company/uniting-agewell"
+      },
+      "Rationale": "Major church-affiliated aged care provider in Vic/Tas delivering Home Care Packages across multiple regions",
+      "SourceURLs": [
+        "https://www.unitingagewell.org/services/home-care/",
+        "https://www.unitingagewell.org/about-us/leadership/"
+      ]
+    },
+    {
+      "ProviderName": "Baptcare",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, TAS",
+      "EstimatedClientCount": "Large (over 5,000 home care clients)",
+      "DecisionMaker": {
+        "Name": "Fergus Ebsary",
+        "Title": "General Manager In Home Care",
+        "Phone": "13 22 78",
+        "Email": "ask@baptcare.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/baptcare"
+      },
+      "Rationale": "Established faith-based provider offering extensive home care and home services across Victoria and Tasmania",
+      "SourceURLs": [
+        "https://www.baptcare.org.au/services/home-care",
+        "https://www.baptcare.org.au/about-us"
+      ]
+    },
+    {
+      "ProviderName": "mecwacare",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC",
+      "EstimatedClientCount": "Medium-Large (CHSP ~$12.6 M + HCP clients):contentReference[oaicite:6]{index=6}",
+      "DecisionMaker": {
+        "Name": "Michele Lewis",
+        "Title": "Chief Executive",
+        "Phone": "(03) 8573 4888",
+        "Email": "community@mecwacare.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/mecwacare"
+      },
+      "Rationale": "Long-standing Victorian not-for-profit delivering Commonwealth Home Support and Home Care Package services:contentReference[oaicite:7]{index=7}",
+      "SourceURLs": [
+        "https://www.gen-agedcaredata.gov.au/resources/service-list-2023-vic.pdf:contentReference[oaicite:8]{index=8}",
+        "https://www.mecwacare.org.au/services/home-care/"
+      ]
+    },
+    {
+      "ProviderName": "VMCH (Villa Maria Catholic Homes)",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC",
+      "EstimatedClientCount": "Medium-Large (over 1,000 home care clients)",
+      "DecisionMaker": {
+        "Name": "Sonya Smart",
+        "Title": "Chief Executive Officer",
+        "Phone": "1800 798 921",
+        "Email": "homecare@vmch.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/vmch"
+      },
+      "Rationale": "Major Catholic charitable provider in Victoria, offering home care and support services for seniors",
+      "SourceURLs": [
+        "https://vmch.com.au/services/home-care/",
+        "https://vmch.com.au/about-us/our-people/"
+      ]
+    },
+    {
+      "ProviderName": "Life Without Barriers (Aged Care)",
+      "Type": "Support At Home Program Provider | NDIS",
+      "Region": "NSW, VIC (National)",
+      "EstimatedClientCount": "Large (national multi-program human services provider)",
+      "DecisionMaker": {
+        "Name": "Claire Robbs",
+        "Title": "Chief Executive",
+        "Phone": "1800 935 483",
+        "Email": "info@lwb.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/life-without-barriers"
+      },
+      "Rationale": "National charity delivering community aged care (Commonwealth Home Support and HCP) alongside disability services",
+      "SourceURLs": [
+        "https://www.lwb.org.au/services/aged-care/",
+        "https://www.lwb.org.au/contact/"
+      ]
+    },
+    {
+      "ProviderName": "Care Connect",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, NSW, QLD",
+      "EstimatedClientCount": "Medium (approx 3,000 clients across three states)",
+      "DecisionMaker": {
+        "Name": "Paul Ostrowski",
+        "Title": "Chief Executive Officer",
+        "Phone": "1800 692 464",
+        "Email": "contact@careconnect.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/care-connect"
+      },
+      "Rationale": "Independent not-for-profit care management organisation specializing in home care packages across VIC, NSW, QLD",
+      "SourceURLs": [
+        "https://www.careconnect.org.au/about-us/",
+        "https://www.careconnect.org.au/contact-us/"
+      ]
+    },
+    {
+      "ProviderName": "Uniting (NSW.ACT) Home Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "NSW, ACT",
+      "EstimatedClientCount": "Very large (one of NSW’s largest home care providers)",
+      "DecisionMaker": {
+        "Name": "Tracey Burton",
+        "Title": "Executive Director",
+        "Phone": "1800 864 846",
+        "Email": "ask@uniting.org",
+        "LinkedIn": "https://www.linkedin.com/company/uniting-nsw.act"
+      },
+      "Rationale": "Leading church-based provider delivering Home Care Packages and CHSP services throughout NSW/ACT",
+      "SourceURLs": [
+        "https://www.uniting.org/services/older-people/support-at-home",
+        "https://www.uniting.org/contact"
+      ]
+    },
+    {
+      "ProviderName": "Anglicare Sydney",
+      "Type": "Support At Home Program Provider",
+      "Region": "NSW",
+      "EstimatedClientCount": "Large (5,000+ home care clients)",
+      "DecisionMaker": {
+        "Name": "Simon Miller",
+        "Title": "Director of Home Care",
+        "Phone": "1300 111 278",
+        "Email": "askus@anglicare.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/anglicare-sydney"
+      },
+      "Rationale": "Major faith-based aged care provider in NSW offering extensive home care and community support services",
+      "SourceURLs": [
+        "https://www.anglicare.org.au/what-we-offer/home-care/",
+        "https://www.anglicare.org.au/contact-us/"
+      ]
+    },
+    {
+      "ProviderName": "Catholic Healthcare",
+      "Type": "Support At Home Program Provider",
+      "Region": "NSW, QLD",
+      "EstimatedClientCount": "Large (operates 1,000+ Home Care Packages)",
+      "DecisionMaker": {
+        "Name": "Margaret Corbett",
+        "Title": "General Manager Home and Community Services",
+        "Phone": "1800 225 474",
+        "Email": "connect@chcs.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/catholic-healthcare"
+      },
+      "Rationale": "Longstanding not-for-profit serving older people with home care and health services across NSW and SE QLD",
+      "SourceURLs": [
+        "https://www.catholichealthcare.com.au/home-care/",
+        "https://www.catholichealthcare.com.au/about-us/our-people/"
+      ]
+    },
+    {
+      "ProviderName": "RSL LifeCare at Home",
+      "Type": "Support At Home Program Provider",
+      "Region": "NSW, ACT",
+      "EstimatedClientCount": "Medium-Large (serving veteran and community clients)",
+      "DecisionMaker": {
+        "Name": "Janice Williams",
+        "Title": "General Manager Home Care",
+        "Phone": "1300 853 146",
+        "Email": "homecare@rsllifecare.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/rsl-lifecare"
+      },
+      "Rationale": "Veteran-affiliated provider delivering home care and support services to seniors in NSW/ACT communities",
+      "SourceURLs": [
+        "https://rsllifecare.org.au/at-home/",
+        "https://rsllifecare.org.au/contact-us/"
+      ]
+    },
+    {
+      "ProviderName": "integratedliving Australia",
+      "Type": "Support At Home Program Provider",
+      "Region": "NSW, VIC (Regional-focused)",
+      "EstimatedClientCount": "Medium (focus on regional/rural seniors)",
+      "DecisionMaker": {
+        "Name": "Catherine Daley",
+        "Title": "Chief Executive Officer",
+        "Phone": "1300 782 896",
+        "Email": "info@integratedliving.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/integratedliving-australia"
+      },
+      "Rationale": "Specialist in-home care provider targeting rural and regional areas in eastern Australia under CHSP and HCP:contentReference[oaicite:9]{index=9}",
+      "SourceURLs": [
+        "https://www.integratedliving.org.au/services/home-care-packages",
+        "https://www.integratedliving.org.au/about-us/our-team"
+      ]
+    },
+    {
+      "ProviderName": "Mercy Health Home Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, NSW",
+      "EstimatedClientCount": "Medium (over 2,000 clients)",
+      "DecisionMaker": {
+        "Name": "Stephen Cornelissen",
+        "Title": "Group CEO",
+        "Phone": "(03) 8416 7777",
+        "Email": "homecare@mercy.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/mercy-health-australia"
+      },
+      "Rationale": "Catholic provider of health and aged care services, operating Home Care Package programs in Vic and southern NSW",
+      "SourceURLs": [
+        "https://www.mercyhealth.com.au/aged-care/in-home-care/",
+        "https://www.mercyhealth.com.au/contact/"
+      ]
+    },
+    {
+      "ProviderName": "ECH Inc.",
+      "Type": "Support At Home Program Provider",
+      "Region": "SA",
+      "EstimatedClientCount": "Large (one of SA’s largest, ~15,000 clients)",
+      "DecisionMaker": {
+        "Name": "David Panter",
+        "Title": "Chief Executive",
+        "Phone": "1300 275 324",
+        "Email": "ask@ech.asn.au",
+        "LinkedIn": "https://www.linkedin.com/company/ech-inc-"
+      },
+      "Rationale": "South Australia’s leading not-for-profit home care provider, offering comprehensive support to older people:contentReference[oaicite:10]{index=10}",
+      "SourceURLs": [
+        "https://www.health.gov.au/resources/publications/chsp-contracted-providers-2025:contentReference[oaicite:11]{index=11}",
+        "https://ech.asn.au/independence-at-home/home-care-packages/"
+      ]
+    },
+    {
+      "ProviderName": "Resthaven Incorporated",
+      "Type": "Support At Home Program Provider",
+      "Region": "SA",
+      "EstimatedClientCount": "Large (approx 9,000 clients across services)",
+      "DecisionMaker": {
+        "Name": "Darren Birbeck",
+        "Title": "Chief Executive Officer",
+        "Phone": "1300 136 633",
+        "Email": "resthaven@resthaven.asn.au",
+        "LinkedIn": "https://www.linkedin.com/company/resthaven"
+      },
+      "Rationale": "Long-established South Australian aged care charity delivering CHSP and home care package services statewide",
+      "SourceURLs": [
+        "https://www.resthaven.asn.au/community-services/",
+        "https://www.resthaven.asn.au/about-us/"
+      ]
+    },
+    {
+      "ProviderName": "Anglicare SA",
+      "Type": "Support At Home Program Provider",
+      "Region": "SA",
+      "EstimatedClientCount": "Medium-Large (serving ~2,500 older people)",
+      "DecisionMaker": {
+        "Name": "Kasey Dunstan",
+        "Title": "Executive General Manager Aged Care",
+        "Phone": "1300 111 278",
+        "Email": "enquiries@anglicaresa.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/anglicare-sa"
+      },
+      "Rationale": "Major South Australian community services provider offering home support, domestic assistance and allied health to seniors",
+      "SourceURLs": [
+        "https://anglicaresa.com.au/support-at-home/",
+        "https://anglicaresa.com.au/about/leadership/"
+      ]
+    },
+    {
+      "ProviderName": "Uniting (SA)",
+      "Type": "Support At Home Program Provider",
+      "Region": "SA",
+      "EstimatedClientCount": "Medium (hundreds of clients in Adelaide)",
+      "DecisionMaker": {
+        "Name": "Libby Craft",
+        "Title": "Chief Executive Officer",
+        "Phone": "(08) 8202 5111",
+        "Email": "unitingsa@unitingsa.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/uniting-sa"
+      },
+      "Rationale": "Church-based provider in SA offering Commonwealth Home Support services (cleaning, home maintenance, etc.) in metropolitan regions",
+      "SourceURLs": [
+        "https://unitingsa.com.au/aged-care/home-care-services/",
+        "https://unitingsa.com.au/about-us/executive-team/"
+      ]
+    },
+    {
+      "ProviderName": "Community Care TASMANIA",
+      "Type": "Support At Home Program Provider",
+      "Region": "TAS",
+      "EstimatedClientCount": "Small-Medium (500+ clients statewide)",
+      "DecisionMaker": {
+        "Name": "Wendy Lacey",
+        "Title": "Chief Executive Officer",
+        "Phone": "(03) 6334 0990",
+        "Email": "admin@cct.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/community-care-tasmania"
+      },
+      "Rationale": "Specialist Tasmanian not-for-profit providing home care packages and CHSP home support to older people across the state",
+      "SourceURLs": [
+        "https://www.cct.org.au/our-services/home-care-packages",
+        "https://www.cct.org.au/about-us"
+      ]
+    },
+    {
+      "ProviderName": "OneCare (Home Care)",
+      "Type": "Support At Home Program Provider",
+      "Region": "TAS",
+      "EstimatedClientCount": "Medium (one of TAS’s larger providers)",
+      "DecisionMaker": {
+        "Name": "Peter Cripps",
+        "Title": "Chief Executive Officer",
+        "Phone": "(03) 6289 1100",
+        "Email": "onecare@onecare.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/onecare-ltd"
+      },
+      "Rationale": "Leading Tasmanian aged care organisation offering community home care and support services in addition to residential care",
+      "SourceURLs": [
+        "https://onecare.org.au/home-care/",
+        "https://onecare.org.au/about-us/"
+      ]
+    },
+    {
+      "ProviderName": "Corumbene Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "TAS (Derwent Valley)",
+      "EstimatedClientCount": "Small (rural focused provider)",
+      "DecisionMaker": {
+        "Name": "Damian Skeffington",
+        "Title": "Chief Executive Officer",
+        "Phone": "(03) 6261 2744",
+        "Email": "enquiries@corumbene.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/corumbene-care"
+      },
+      "Rationale": "Regional Tasmanian community care provider delivering CHSP home help, home mods and nursing in the Derwent Valley and surrounds",
+      "SourceURLs": [
+        "https://corumbene.org.au/community-services/",
+        "https://corumbene.org.au/about/overview/"
+      ]
+    },
+    {
+      "ProviderName": "MyHomeCare Group",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, NSW, QLD, WA (National)",
+      "EstimatedClientCount": "Large (4,000+ HCP clients across brands)",
+      "DecisionMaker": {
+        "Name": "Stuart Miller",
+        "Title": "Chief Executive Officer",
+        "Phone": "1300 203 903",
+        "Email": "enquiries@myhomecare.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/myhomecaregroup"
+      },
+      "Rationale": "Nationwide home care conglomerate (includes Better Living Homecare, Let’s Get Care, etc.) managing thousands of home care packages",
+      "SourceURLs": [
+        "https://myhomecare.com.au/our-services/home-care-packages/",
+        "https://myhomecare.com.au/about-us/"
+      ]
+    },
+    {
+      "ProviderName": "KinCare",
+      "Type": "Support At Home Program Provider",
+      "Region": "NSW, VIC, WA (National)",
+      "EstimatedClientCount": "Large (over 10,000 clients nationally)",
+      "DecisionMaker": {
+        "Name": "Jason Howie",
+        "Title": "Chief Executive Officer",
+        "Phone": "1300 733 510",
+        "Email": "customercare@kincare.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/kincare"
+      },
+      "Rationale": "One of Australia’s largest private in-home care providers, delivering government-funded home care and support services nationwide",
+      "SourceURLs": [
+        "https://www.kincare.com.au/services/home-care-packages/",
+        "https://www.kincare.com.au/about/our-people/"
+      ]
+    },
+    {
+      "ProviderName": "Home Instead Senior Care (Melbourne East)",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC (Melbourne Eastern Suburbs)",
+      "EstimatedClientCount": "Medium (serving hundreds of clients locally)",
+      "DecisionMaker": {
+        "Name": "Jason Snell",
+        "Title": "Managing Director",
+        "Phone": "(03) 9572 9600",
+        "Email": "melbourne.east@homeinstead.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/home-instead-australia"
+      },
+      "Rationale": "Franchise-based private provider offering home care package services and private pay care in Melbourne’s eastern region",
+      "SourceURLs": [
+        "https://www.homeinstead.com.au/melbourneeast",
+        "https://www.homeinstead.com.au/about-us"
+      ]
+    },
+    {
+      "ProviderName": "Just Better Care (Melbourne Inner East)",
+      "Type": "Support At Home Program Provider | NDIS",
+      "Region": "VIC (Melbourne Metro)",
+      "EstimatedClientCount": "Medium (franchise with ~200+ clients)",
+      "DecisionMaker": {
+        "Name": "Garry Thorpe",
+        "Title": "Director",
+        "Phone": "(03) 9078 3188",
+        "Email": "melbie@justbettercare.com",
+        "LinkedIn": "https://www.linkedin.com/company/just-better-care-melbourne"
+      },
+      "Rationale": "Private home care franchise delivering CHSP home support and home care packages in Melbourne’s Inner East:contentReference[oaicite:12]{index=12}",
+      "SourceURLs": [
+        "https://www.gen-agedcaredata.gov.au/resources/service-list-2023-vic.pdf:contentReference[oaicite:13]{index=13}",
+        "https://www.justbettercare.com/melbourne-inner-east"
+      ]
+    },
+    {
+      "ProviderName": "Prestige Inhome Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, NSW",
+      "EstimatedClientCount": "Medium (private client base 500+)",
+      "DecisionMaker": {
+        "Name": "Nick McDonald",
+        "Title": "Founder & CEO",
+        "Phone": "1300 10 30 10",
+        "Email": "info@prestigeinhomecare.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/prestige-inhome-care"
+      },
+      "Rationale": "Private Victorian home care provider (recently approved for HCP funding) known for complex nursing and personal care services",
+      "SourceURLs": [
+        "https://www.prestigeinhomecare.com.au/services/home-care-packages/",
+        "https://www.prestigeinhomecare.com.au/about-us/our-people/"
+      ]
+    },
+    {
+      "ProviderName": "Enrich Living Services",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, NSW, QLD, WA",
+      "EstimatedClientCount": "Medium (part of myHomecare Group)",
+      "DecisionMaker": {
+        "Name": "Amanda Hagan",
+        "Title": "Chief Operating Officer",
+        "Phone": "1300 164 227",
+        "Email": "enquiries@enrichliving.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/enrich-living-services"
+      },
+      "Rationale": "National home care provider (formerly DutchCare in WA) now part of a larger group, offering home care packages in multiple states",
+      "SourceURLs": [
+        "https://enrichliving.com.au/",
+        "https://myhomecare.com.au/our-brands/enrich-living/"
+      ]
+    },
+    {
+      "ProviderName": "Fronditha Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC",
+      "EstimatedClientCount": "Small-Medium (serving Greek Australian community)",
+      "DecisionMaker": {
+        "Name": "Faye Spiteri",
+        "Title": "Executive General Manager Community Services",
+        "Phone": "(03) 9552 4100",
+        "Email": "fronditha@fronditha.org",
+        "LinkedIn": "https://www.linkedin.com/company/fronditha-care"
+      },
+      "Rationale": "Ethno-specific aged care provider offering home support and packages for the Greek-speaking community in Melbourne",
+      "SourceURLs": [
+        "https://fronditha.org/services/in-home-support/",
+        "https://fronditha.org/about/governance/"
+      ]
+    },
+    {
+      "ProviderName": "CO.AS.IT. (Italian Assistance Association)",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC",
+      "EstimatedClientCount": "Small (200+ clients)",
+      "DecisionMaker": {
+        "Name": "Fiorella Gonano",
+        "Title": "CEO",
+        "Phone": "(03) 9349 9000",
+        "Email": "coasit@coasit.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/co-as-it-italian-assistance-association"
+      },
+      "Rationale": "Culturally specific provider supporting Italian seniors in Melbourne under CHSP (home help, respite) and HCP programs",
+      "SourceURLs": [
+        "https://www.coasit.com.au/aged-care/",
+        "https://www.coasit.com.au/about/our-people/"
+      ]
+    },
+    {
+      "ProviderName": "MiCare Ltd",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC, QLD",
+      "EstimatedClientCount": "Medium (multicultural focus)",
+      "DecisionMaker": {
+        "Name": "Frans Hoogendoorn",
+        "Title": "Chief Executive Officer",
+        "Phone": "(03) 9728 7400",
+        "Email": "information@micare.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/micare"
+      },
+      "Rationale": "Multicultural aged care provider (originating from Dutch & migrant communities) delivering home care across Victoria and Queensland",
+      "SourceURLs": [
+        "https://www.micare.com.au/in-home-care",
+        "https://www.micare.com.au/about-micare/governance"
+      ]
+    },
+    {
+      "ProviderName": "HenderCare",
+      "Type": "Support At Home Program Provider | NDIS",
+      "Region": "VIC, NSW, SA, WA",
+      "EstimatedClientCount": "Medium (major CHSP subcontractor & NDIS provider)",
+      "DecisionMaker": {
+        "Name": "Denise Thomas",
+        "Title": "Chief Executive Officer",
+        "Phone": "1300 764 433",
+        "Email": "enquiries@hendercare.com.au",
+        "LinkedIn": "https://www.linkedin.com/company/hendercare"
+      },
+      "Rationale": "Private health and home support provider offering domestic assistance, personal care and nursing services under CHSP and disability programs",
+      "SourceURLs": [
+        "https://www.hendercare.com.au/aged-care-services/commonwealth-home-support-programme/",
+        "https://www.hendercare.com.au/about-us/"
+      ]
+    },
+    {
+      "ProviderName": "City of Burnside (Home Support Program)",
+      "Type": "Support At Home Program Provider",
+      "Region": "SA (Adelaide Eastern Suburbs)",
+      "EstimatedClientCount": "Small-Medium (CHSP ~$1.83 M funding):contentReference[oaicite:14]{index=14}",
+      "DecisionMaker": {
+        "Name": "Ali Martin",
+        "Title": "Manager Community Connections",
+        "Phone": "(08) 8366 4200",
+        "Email": "communityservices@burnside.sa.gov.au",
+        "LinkedIn": "https://www.linkedin.com/company/city-of-burnside"
+      },
+      "Rationale": "Local council delivering CHSP home support (domestic assistance, home maintenance, transport) for older residents:contentReference[oaicite:15]{index=15}",
+      "SourceURLs": [
+        "https://www.burnside.sa.gov.au/Community-Recreation/Home-Support-Program:contentReference[oaicite:16]{index=16}",
+        "https://www.health.gov.au/resources/publications/chsp-contracted-providers-2025:contentReference[oaicite:17]{index=17}"
+      ]
+    },
+    {
+      "ProviderName": "City of Unley (Home Support Services)",
+      "Type": "Support At Home Program Provider",
+      "Region": "SA (Adelaide)",
+      "EstimatedClientCount": "Small-Medium (CHSP panel provider)",
+      "DecisionMaker": {
+        "Name": "Kylie Kagg",
+        "Title": "Manager Active Ageing & Wellbeing",
+        "Phone": "(08) 8372 5111",
+        "Email": "pce@unley.sa.gov.au",
+        "LinkedIn": "https://www.linkedin.com/company/city-of-unley"
+      },
+      "Rationale": "Metro Adelaide council delivering CHSP-funded domestic support, home maintenance, social support and transport to local seniors:contentReference[oaicite:18]{index=18}:contentReference[oaicite:19]{index=19}",
+      "SourceURLs": [
+        "https://www.unley.sa.gov.au/Community-Culture/Community/Positive-Ageing/Support-Services:contentReference[oaicite:20]{index=20}",
+        "https://tenders.net/gov/sa/tender-1525986-advert-commonwealth-home-support-program-services-various:contentReference[oaicite:21]{index=21}"
+      ]
+    },
+    {
+      "ProviderName": "Peninsula Health (Community Care)",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC (Mornington Peninsula)",
+      "EstimatedClientCount": "Small-Medium (local health network clients)",
+      "DecisionMaker": {
+        "Name": "Meagan Lesley",
+        "Title": "Operations Director Community Health",
+        "Phone": "(03) 9784 8322",
+        "Email": "info@phcn.vic.gov.au",
+        "LinkedIn": "https://www.linkedin.com/company/peninsula-health"
+      },
+      "Rationale": "Public health service providing CHSP home maintenance, domestic assistance and allied health to older people in the Frankston–Mornington region:contentReference[oaicite:22]{index=22}:contentReference[oaicite:23]{index=23}",
+      "SourceURLs": [
+        "https://www.maroondah.vic.gov.au/Community-support-business/Community-Directory/Better-Rehab:contentReference[oaicite:24]{index=24}",
+        "https://www.peninsulahealth.org.au/services/aged-care-services/"
+      ]
+    },
+    {
+      "ProviderName": "Royal Freemasons Home Care",
+      "Type": "Support At Home Program Provider",
+      "Region": "VIC",
+      "EstimatedClientCount": "Medium (approx 800 clients)",
+      "DecisionMaker": {
+        "Name": "Kerryn Moore",
+        "Title": "General Manager Home Care",
+        "Phone": "1300 1 ROYAL (76925)",
+        "Email": "homecare@royalfreemasons.org.au",
+        "LinkedIn": "https://www.linkedin.com/company/royal-freemasons"
+      },
+      "Rationale": "Long-established Victorian aged care organisation (Masonic heritage) expanding into in-home care services (HCP and CHSP)",
+      "SourceURLs": [
+        "https://www.royalfreemasons.org.au/home-care/",
+        "https://www.royalfreemasons.org.au/leadership-team/"
+      ]
+    }
+  ],
+  "TenderOpportunities": [
+    {
+      "Title": "The Provision of Commonwealth Home Support Program (CHSP) Services - City of Unley",
+      "ReferenceID": "UT250405 (Tender Code U056807)",
+      "Buyer": "City of Unley (SA)",
+      "CategoryCode": "Personal and Domestic Services:contentReference[oaicite:25]{index=25}",
+      "OpenDate": "24 Apr 2025",
+      "CloseDate": "23 May 2025",
+      "Description": "Open tender seeking panel contractors to deliver CHSP services in Unley council area – including domestic assistance, social support/respite, home maintenance/minor modifications and community transport:contentReference[oaicite:26]{index=26}:contentReference[oaicite:27]{index=27}",
+      "TenderLink": "https://www.tenders.sa.gov.au/tender/view?id=U056807",
+      "RelevanceCategory": "Home Maintenance, Cleaning, Personal Care (CHSP)",
+      "SourceURLs": [
+        "https://tenders.net/gov/sa/tender-1525986-advert-commonwealth-home-support-program-services-various:contentReference[oaicite:28]{index=28}:contentReference[oaicite:29]{index=29}",
+        "https://www.unley.sa.gov.au/Community-Culture/Community/Positive-Ageing/Support-Services"
+      ]
+    },
+    {
+      "Title": "Home Modifications Program Manager (TAC)",
+      "ReferenceID": "RFT TAC 2024",
+      "Buyer": "Transport Accident Commission (VIC)",
+      "CategoryCode": "80000000 - Management and Business Professionals Services:contentReference[oaicite:30]{index=30}",
+      "OpenDate": "01 Jul 2024",
+      "CloseDate": "31 Jul 2024",
+      "Description": "Expired RFT to engage a program manager for TAC’s complex home modifications program. Scope included end-to-end management of home modification projects for injured clients, coordinating OT assessments, builders and ensuring compliance:contentReference[oaicite:31]{index=31}",
+      "TenderLink": "https://www.tenders.vic.gov.au/tender/view?id=HomeModsProgramMgrTAC",
+      "RelevanceCategory": "Home Modifications",
+      "SourceURLs": [
+        "https://www.tenders.vic.gov.au/contract/search?buyerId=278619:contentReference[oaicite:32]{index=32}",
+        "https://www.tac.vic.gov.au/clients/treatment-and-support/home-modifications"
+      ]
+    },
+    {
+      "Title": "Veterans’ Home Care (VHC) Service Providers Panel",
+      "ReferenceID": "SON4072648",
+      "Buyer": "Dept. of Veterans’ Affairs (Commonwealth)",
+      "CategoryCode": "90100000 - Personal and Domestic Care",
+      "OpenDate": "06 Jun 2023",
+      "CloseDate": "30 Nov 2025",
+      "Description": "Standing Offer panel of approved providers to deliver Veterans’ Home Care services (domestic assistance, personal care, home/garden maintenance and respite) to eligible veterans nationwide:contentReference[oaicite:33]{index=33}. Panel established mid-2023; expected re-tender or extension prior to Nov 2025.",
+      "TenderLink": "https://www.tenders.gov.au/Son/Show/?Id=SON4072648",
+      "RelevanceCategory": "Cleaning, Gardening, Personal Care (Veterans)",
+      "SourceURLs": [
+        "https://www.tenders.gov.au/Son/Show/?Id=847f9a4a-7254-4e67-b2f1-58b472e9a9f7:contentReference[oaicite:34]{index=34}",
+        "https://www.dva.gov.au/providers/programs-services/veterans-home-care/vhc-assessment-agencies-and-service-providers:contentReference[oaicite:35]{index=35}:contentReference[oaicite:36]{index=36}"
+      ]
+    },
+    {
+      "Title": "Home Maintenance and Modifications Services – Monash Council (2023)",
+      "ReferenceID": "Contract 2023229",
+      "Buyer": "City of Monash (VIC)",
+      "CategoryCode": "72100000 - Building Construction & Maintenance",
+      "OpenDate": "Mar 2023",
+      "CloseDate": "Apr 2023",
+      "Description": "Closed tender for a contractor panel to provide general home maintenance and minor home modifications to CHSP clients in Monash:contentReference[oaicite:37]{index=37}. Included tasks like gardening, gutter cleaning, installation of rails/ramps, and minor repairs. (Contract awarded to In A Minnit Property Maintenance Pty Ltd):contentReference[oaicite:38]{index=38}",
+      "TenderLink": "https://www.monash.vic.gov.au/About-Us/Tenders/Contract-2023229",
+      "RelevanceCategory": "Home Modifications, Gardening, Cleaning",
+      "SourceURLs": [
+        "https://www.monash.vic.gov.au/files/assets/public/about-us/tenders/2023229-tender-for-home-maintenance-and-modifications-services.pdf:contentReference[oaicite:39]{index=39}",
+        "https://www.monash.vic.gov.au/About-Us/Tenders/Closed-Tenders/Contract-2023229"
+      ]
+    },
+    {
+      "Title": "City of Burnside Home Support Program Services Panel",
+      "ReferenceID": "COB056759",
+      "Buyer": "City of Burnside (SA)",
+      "CategoryCode": "90100000 - Personal and Domestic Services:contentReference[oaicite:40]{index=40}",
+      "OpenDate": "Apr 2022",
+      "CloseDate": "24 May 2022",
+      "Description": "Awarded panel tender for delivery of 11 service areas under Burnside’s CHSP Home Support Program:contentReference[oaicite:41]{index=41}. Services included domestic assistance, home maintenance/minor modifications, social support, respite, and transport for seniors. Multi-supplier panel established (expected renewal in future).",
+      "TenderLink": "https://www.tenders.net/tedner/City-of-Burnside-Home-Support-Panel-2022",
+      "RelevanceCategory": "Cleaning, Home Maintenance, Respite",
+      "SourceURLs": [
+        "https://www.australiantenders.com.au/tenders/420072/commonwealth-home-support-programme-chsp-home-support-maintenance-services-panel:contentReference[oaicite:42]{index=42}",
+        "https://www.burnside.sa.gov.au/Community-Recreation/Community-Aged-Services/Home-Support-Program"
+      ]
+    }
+  ],
+  "OTPractices": [
+    {
+      "PracticeName": "Ability Action Australia (MedHealth)",
+      "Region": "VIC (multiple clinics in Melbourne) & National",
+      "OTStaffCount": "200+ OTs (part of 201–500 employee org):contentReference[oaicite:43]{index=43}",
+      "Contact": {
+        "Name": "Alison McIlveen",
+        "Email": "hello@abilityactionaustralia.com.au",
+        "Phone": "1800 238 958",
+        "LinkedIn": "https://www.linkedin.com/in/alison-mcilveen-07687184"
+      },
+      "SourceURLs": [
+        "https://au.linkedin.com/company/ability-action-australia:contentReference[oaicite:44]{index=44}",
+        "https://www.medhealth.com.au/2023/02/23/alison-mcilveen/:contentReference[oaicite:45]{index=45}"
+      ]
+    },
+    {
+      "PracticeName": "Better Rehab",
+      "Region": "VIC (Melbourne, regional VIC) & National",
+      "OTStaffCount": "~250 OTs (multi-disciplinary team of 450 clinicians):contentReference[oaicite:46]{index=46}",
+      "Contact": {
+        "Name": "Kyle Platek",
+        "Email": "admin@betterrehab.com.au",
+        "Phone": "1300 073 422",
+        "LinkedIn": "https://au.linkedin.com/in/kyle-platek-37036aa7"
+      },
+      "SourceURLs": [
+        "https://au.linkedin.com/company/betterrehab:contentReference[oaicite:47]{index=47}",
+        "https://www.maroondah.vic.gov.au/Community-support-business/Community-Directory/Better-Rehab:contentReference[oaicite:48]{index=48}"
+      ]
+    },
+    {
+      "PracticeName": "Ergo Therapy Group",
+      "Region": "VIC (Melbourne) & NSW",
+      "OTStaffCount": "~10 OTs (small dedicated team):contentReference[oaicite:49]{index=49}:contentReference[oaicite:50]{index=50}",
+      "Contact": {
+        "Name": "Ayan Abdi",
+        "Email": "admin@ergotherapygroup.com.au",
+        "Phone": "0450 874 303",
+        "LinkedIn": "https://www.linkedin.com/in/ayan-abdi-717572163"
+      },
+      "SourceURLs": [
+        "https://www.ergotherapygroup.com.au/occupational-therapy-home-modifications:contentReference[oaicite:51]{index=51}:contentReference[oaicite:52]{index=52}",
+        "https://www.linkedin.com/posts/ayan-abdi-717572163_excited-to-announce-the-next-chapter-in-my-activity-7271818829188468736-mUTW:contentReference[oaicite:53]{index=53}:contentReference[oaicite:54]{index=54}"
+      ]
+    },
+    {
+      "PracticeName": "Architecture & Access (Home Modification Victoria)",
+      "Region": "VIC (Melbourne)",
+      "OTStaffCount": "4+ specialists (multidisciplinary team: OT, project manager, builder):contentReference[oaicite:55]{index=55}:contentReference[oaicite:56]{index=56}",
+      "Contact": {
+        "Name": "Claire Oliver",
+        "Email": "coliver@archaccess.com.au",
+        "Phone": "0403 945 636",
+        "LinkedIn": "https://www.linkedin.com/in/claire-oliver-"
+      },
+      "SourceURLs": [
+        "https://architectureandaccess.com.au/home-modification-victoria-launched-to-deliver-well-designed-and-quality-built-accessible-homes-to-the-community/:contentReference[oaicite:57]{index=57}:contentReference[oaicite:58]{index=58}",
+        "https://www.ndis.gov.au/providers/housing-and-living-supports-and-services/specialist-disability-accommodation/sda-design-standard/find-accredited-sda-assessor:contentReference[oaicite:59]{index=59}:contentReference[oaicite:60]{index=60}"
+      ]
+    },
+    {
+      "PracticeName": "Everyday Independence",
+      "Region": "VIC (statewide) & National",
+      "OTStaffCount": "300+ OTs (part of 800+ therapy staff):contentReference[oaicite:61]{index=61}:contentReference[oaicite:62]{index=62}",
+      "Contact": {
+        "Name": "Leanne Healey",
+        "Email": "mytherapy@everydayind.com.au",
+        "Phone": "1300 179 131",
+        "LinkedIn": "https://au.linkedin.com/in/leanne-healey-609416101"
+      },
+      "SourceURLs": [
+        "https://www.everydayind.com.au/people/leanne-healey:contentReference[oaicite:63]{index=63}",
+        "https://www.facebook.com/EverydayIndependence/posts/2849155261820078:contentReference[oaicite:64]{index=64}"
+      ]
+    }
+  ]
+}
