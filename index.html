@@ -16,33 +16,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    /* Smooth dark‑mode transition */
-    *{transition:background-color .2s ease,color .2s ease;}
-    ::selection{background:#3b82f6; color:white;}
-    summary::-webkit-details-marker{display:none;}
+    *{transition:background-color .2s ease,color .2s ease}
+    ::selection{background:#3b82f6;color:white}
+    summary::-webkit-details-marker{display:none}
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-  <!--============== Top bar ==============-->
-  <nav class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+  <!-- Top bar -->
+  <nav class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
     <div class="flex items-center gap-2 text-lg font-semibold">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
       IAM&nbsp;Sentinel
     </div>
     <div class="flex items-center gap-4 text-sm">
-      <button id="downloadPdf" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"><i data-feather="download" class="w-4"></i><span>Export PDF</span></button>
+      <button id="downloadPdf" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+        <i data-feather="download" class="w-4"></i><span>Export PDF</span>
+      </button>
       <button id="toggleDark" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i data-feather="moon"></i></button>
     </div>
   </nav>
 
-  <!--============== KPI tiles ==============-->
+  <!-- KPI tiles -->
   <section class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
     <div class="rounded-lg p-4 bg-blue-500/10 dark:bg-blue-400/20">
       <div class="text-sm">New Clients</div>
       <div id="kpiClients" class="text-3xl font-semibold">–</div>
     </div>
     <div class="rounded-lg p-4 bg-amber-500/10 dark:bg-amber-400/20">
-      <div class="text-sm">Tenders ≤ 14 days</div>
+      <div class="text-sm">Tenders ≤ 14 days</div>
       <div id="kpiTenders" class="text-3xl font-semibold">–</div>
     </div>
     <div class="rounded-lg p-4 bg-purple-500/10 dark:bg-purple-400/20">
@@ -51,38 +52,39 @@
     </div>
   </section>
 
-  <!--============== Filters ==============-->
-  <section class="px-4 space-y-4 max-w-screen-lg mx-auto">
-    <h2 class="font-semibold text-lg">Filter New Clients</h2>
+  <!-- Filters -->
+  <section class="px-4 space-y-6 max-w-screen-lg mx-auto">
+    <h2 class="font-semibold text-lg">Filters</h2>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Region checkboxes -->
       <div>
-        <label class="block text-sm mb-1">Region</label>
-        <div id="regionFilter" class="space-y-1 max-h-28 overflow-auto border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-800">
-          <!-- checkboxes injected via JS -->
+        <span class="block text-sm mb-2">Region</span>
+        <div id="regionFilter" class="space-y-1 h-32 overflow-auto p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded"></div>
+      </div>
+      <!-- Type checkboxes -->
+      <div>
+        <span class="block text-sm mb-2">Provider Type</span>
+        <div id="typeFilter" class="space-y-1 h-32 overflow-auto p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded">
+          <label class="inline-flex items-center"><input type="checkbox" value="Support At Home Program Provider" class="mr-2"><span class="text-sm">Support At Home</span></label><br>
+          <label class="inline-flex items-center"><input type="checkbox" value="NDIS" class="mr-2"><span class="text-sm">NDIS</span></label><br>
+          <label class="inline-flex items-center"><input type="checkbox" value="Other" class="mr-2"><span class="text-sm">Other</span></label>
         </div>
       </div>
+      <!-- Search -->
       <div>
-        <label class="block text-sm mb-1">Provider Type</label>
-        <div id="typeFilter" class="space-y-1 max-h-28 overflow-auto border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-800">
-          <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="Support At Home Program Provider" class="form-checkbox"> Support At Home Program Provider</label>
-          <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="NDIS" class="form-checkbox"> NDIS</label>
-          <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="Other" class="form-checkbox"> Other</label>
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm mb-1" for="searchBox">Search</label>
-        <input id="searchBox" type="search" placeholder="Name or rationale…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" />
+        <span class="block text-sm mb-2">Search</span>
+        <input id="searchBox" type="search" placeholder="Name or rationale…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 p-2" />
         <button id="resetBtn" class="mt-2 px-3 py-1.5 w-full rounded bg-gray-200 dark:bg-gray-700 text-sm">Reset</button>
       </div>
     </div>
   </section>
 
-  <!--============== Clients grid ==============-->
+  <!-- Clients grid -->
   <section class="px-4 py-8 max-w-screen-lg mx-auto">
     <div id="clientGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </section>
 
-  <!--============== Tenders ==============-->
+  <!-- Tenders -->
   <section class="px-4 py-6 bg-gray-100 dark:bg-gray-800/40">
     <div class="max-w-screen-lg mx-auto">
       <h2 class="font-semibold text-lg mb-4">Tender Opportunities</h2>
@@ -90,68 +92,61 @@
     </div>
   </section>
 
-  <!--============== OT Practices ==============-->
+  <!-- OT Practices -->
   <section class="px-4 py-6 max-w-screen-lg mx-auto">
     <h2 class="font-semibold text-lg mb-4">OT Practices</h2>
     <div id="otGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </section>
 
-  <footer class="text-center text-xs py-4 opacity-70">© 2025 In A Minnit</footer>
+  <footer class="text-center text-xs py-4 opacity-70">© 2025 In A Minnit</footer>
 
-  <!--============== Script ==============-->
+  <!-- Script -->
   <script>
     feather.replace();
+    const root=document.documentElement;
+    if(localStorage.getItem('iam-dark')==='true') root.classList.add('dark');
+    document.getElementById('toggleDark').onclick=function(){root.classList.toggle('dark');localStorage.setItem('iam-dark',root.classList.contains('dark'))};
 
-    /* Dark‑mode persistence */
-    const root=document.documentElement; const darkStored=localStorage.getItem('iam-dark'); if(darkStored==='true') root.classList.add('dark');
-    document.getElementById('toggleDark').onclick=()=>{root.classList.toggle('dark'); localStorage.setItem('iam-dark',root.classList.contains('dark'))};
-
-    /* Data holders */
     let clients=[], tenders=[], ots=[];
-
-    /* Helpers */
-    const qs=(sel,par=document)=>par.querySelector(sel);
-    const qsa=(sel,par=document)=>[...par.querySelectorAll(sel)];
-    const getProp=(obj,...keys)=>keys.find(k=>k in obj)&&obj[keys.find(k=>k in obj)];
+    const qs=s=>document.querySelector(s), qsa=s=>Array.from(document.querySelectorAll(s));
     const stateRegex=/[A-Z]{2,3}/g;
+    const getSrc=(o)=>o.Sources||o.SourceURLs||[];
+    const getEst=(o)=>o.EstimatedClients||o.EstimatedClientCount||o.EstimatedClient||'n/a';
 
-    /* Render functions */
     function renderClients(){
-      const regionSel=qsa('#regionFilter input:checked').map(cb=>cb.value);
-      const typeSel=qsa('#typeFilter input:checked').map(cb=>cb.value);
+      const selectedRegions=qsa('#regionFilter input:checked').map(cb=>cb.value);
+      const selectedTypes=qsa('#typeFilter input:checked').map(cb=>cb.value);
       const term=qs('#searchBox').value.toLowerCase();
-      const grid=qs('#clientGrid'); grid.innerHTML='';
+      const container=qs('#clientGrid'); container.innerHTML='';
       clients.filter(c=>{
-        const regionMatch=!regionSel.length||regionSel.some(r=>c.Region.includes(r));
-        const typeMatch=!typeSel.length||typeSel.includes(c.Type);
-        const searchMatch=!term||c.ProviderName.toLowerCase().includes(term)||c.Rationale.toLowerCase().includes(term);
-        return regionMatch&&typeMatch&&searchMatch;
+        const regionOk=!selectedRegions.length||selectedRegions.some(r=>c.Region.includes(r));
+        const typeOk=!selectedTypes.length||selectedTypes.includes(c.Type);
+        const searchOk=!term||c.ProviderName.toLowerCase().includes(term)||c.Rationale.toLowerCase().includes(term);
+        return regionOk&&typeOk&&searchOk;
       }).forEach(c=>{
-        const est=getProp(c,'EstimatedClients','EstimatedClientCount','EstimatedClient');
-        const card=document.createElement('article');
-        card.className='rounded-lg shadow bg-white dark:bg-gray-800 flex flex-col';
+        const card=document.createElement('article'); card.className='rounded-lg shadow bg-white dark:bg-gray-800 flex flex-col';
         card.innerHTML=`
           <div class='p-4 flex-1 flex flex-col'>
             <h3 class='font-semibold mb-1'>${c.ProviderName}</h3>
             <div class='text-xs mb-2 opacity-70'>${c.Type} · ${c.Region}</div>
-            <div class='text-sm mb-4'>Est. clients: <span class='font-medium'>${est||'n/a'}</span></div>
+            <div class='text-sm mb-4'>Est. clients: <span class='font-medium'>${getEst(c)}</span></div>
             <p class='text-sm flex-1'>${c.Rationale}</p>
           </div>
           <details class='border-t border-gray-200 dark:border-gray-700'>
-            <summary class='px-4 py-2 cursor-pointer select-none flex items-center gap-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700'>Contact & sources<i data-feather='chevron-down' class='w-4'></i></summary>
+            <summary class='px-4 py-2 cursor-pointer flex items-center gap-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700'>Contact & sources<i data-feather='chevron-down' class='w-4'></i></summary>
             <div class='px-4 py-3 text-sm space-y-2'>
               <div><span class='font-medium'>${c.DecisionMaker.Name}</span> · ${c.DecisionMaker.Title}</div>
-              <div class='flex gap-2'>
+              <div class='flex gap-4'>
                 ${c.DecisionMaker.Phone?`<a href='tel:${c.DecisionMaker.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>Call</a>`:''}
                 ${c.DecisionMaker.Email?`<a href='mailto:${c.DecisionMaker.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>Email</a>`:''}
                 ${c.DecisionMaker.LinkedIn?`<a href='${c.DecisionMaker.LinkedIn}' target='_blank' class='underline flex items-center gap-1'><i data-feather='linkedin' class='w-4'></i>LinkedIn</a>`:''}
               </div>
-              <div>Sources: ${getProp(c,'Sources','SourceURLs','source')?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>
+              <div>Sources: ${getSrc(c).map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ') || 'n/a'}</div>
             </div>
           </details>`;
-        grid.appendChild(card);
+        container.appendChild(card);
       });
-      feather.replace(); // refresh icons inside new nodes
+      feather.replace();
     }
 
     function renderTenders(){
@@ -159,13 +154,19 @@
       tenders.forEach(t=>{
         const days=Math.ceil((new Date(t.CloseDate)-Date.now())/864e5);
         const badge=days<=3?'bg-red-600':days<=10?'bg-amber-500':'bg-emerald-600';
-        const card=document.createElement('article');
-        card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
-        card.innerHTML=`<h3 class='font-semibold mb-1'>${t.Title}</h3>
+        const card=document.createElement('article'); card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
+        card.innerHTML=`
+          <h3 class='font-semibold mb-1'>${t.Title}</h3>
           <div class='text-xs mb-2 opacity-70'>${t.Buyer}</div>
-          <div class='flex items-center gap-2 text-sm mb-3'><span class='px-2 py-0.5 rounded text-white ${badge}'>Closes ${t.CloseDate}</span><span class='opacity-80'>${t.Relevance||t.CategoryCode||''}</span></div>
+          <div class='flex items-center gap-2 text-sm mb-3'>
+            <span class='px-2 py-0.5 rounded text-white ${badge}'>Closes ${t.CloseDate}</span>
+            <span class='opacity-80'>${t.Relevance||t.CategoryCode||''}</span>
+          </div>
           <p class='text-sm mb-3'>${t.Description||''}</p>
-          <div class='flex gap-4'><a href='${getProp(t,'Link','TenderLink')}' target='_blank' class='underline flex items-center gap-1'><i data-feather='external-link' class='w-4'></i>Open</a><span class='text-xs'>Sources: ${getProp(t,'Sources','SourceURLs')?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</span></div>`;
+          <div class='flex gap-4'>
+            <a href='${t.Link||t.TenderLink}' target='_blank' class='underline flex items-center gap-1'><i data-feather='external-link' class='w-4'></i>Open</a>
+            <span class='text-xs'>Sources: ${(t.Sources||t.SourceURLs||[]).map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</span>
+          </div>`;
         wrap.appendChild(card);
       });
       feather.replace();
@@ -174,9 +175,41 @@
     function renderOT(){
       const grid=qs('#otGrid'); grid.innerHTML='';
       ots.forEach(o=>{
-        const card=document.createElement('article');
-        card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
-        card.innerHTML=`<h3 class='font-semibold mb-1'>${o.PracticeName}</h3>
+        const card=document.createElement('article'); card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
+        card.innerHTML=`
+          <h3 class='font-semibold mb-1'>${o.PracticeName}</h3>
           <div class='text-xs mb-2 opacity-70'>${o.Region}</div>
           <div class='text-sm mb-3'>OTs: <span class='font-medium'>${o.OTCount}</span></div>
-          <div class='flex flex-col gap-1 text-sm'>${o.Contact.Phone?`<a href='tel:${o.Contact.Phone.replace(/\s/g,'')}' class='underline flex...
+          <div class='flex flex-col gap-1 text-sm'>
+            ${o.Contact.Phone?`<a href='tel:${o.Contact.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>${o.Contact.Phone}</a>`:''}
+            ${o.Contact.Email?`<a href='mailto:${o.Contact.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>${o.Contact.Email}</a>`:''}
+          </div>
+          <div class='mt-2 text-xs'>Sources: ${(o.Sources||o.SourceURLs||[]).map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>`;
+        grid.appendChild(card);
+      });
+      feather.replace();
+    }
+
+    fetch('data.json').then(r=>r.json()).then(d=>{
+      clients=d.NewPotentialClients||[]; tenders=d.TenderOpportunities||[]; ots=d.OTPractices||[];
+      qs('#kpiClients').textContent=clients.length;
+      qs('#kpiOT').textContent=ots.length;
+      qs('#kpiTenders').textContent=tenders.filter(t=>((new Date(t.CloseDate)-Date.now())/864e5)<=14).length;
+
+      const regions=[...new Set(clients.flatMap(c=>c.Region.match(stateRegex)||[]))].sort();
+      const regionDiv=qs('#regionFilter'); regions.forEach(r=>{
+        const id=`rg_${r}`;
+        regionDiv.innerHTML+=`<label class='inline-flex items-center'><input type='checkbox' value='${r}' id='${id}' class='mr-2'>${r}</label><br>`;
+      });
+
+      renderClients(); renderTenders(); renderOT();
+    });
+
+    qsa('#regionFilter input, #typeFilter input').forEach(cb=>cb.addEventListener('change',renderClients));
+    qs('#searchBox').addEventListener('input',renderClients);
+    qs('#resetBtn').onclick=()=>{qsa('#regionFilter input:checked, #typeFilter input:checked').forEach(cb=>cb.checked=false); qs('#searchBox').value=''; renderClients();};
+    qs('#downloadPdf').classList.remove('hidden');
+    qs('#downloadPdf').onclick=()=>html2pdf().from(document.body).set({margin:0.2,filename:'IAM-Sentinel.pdf',html2canvas:{scale:2}}).save();
+  </script>
+</body>
+</html>
