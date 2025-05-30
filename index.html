@@ -1,1 +1,135 @@
-<paste your final HTML content here>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>In A Minnit – Lead Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash"></script>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; background: #f9f9f9; }
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .section { margin-top: 2rem; }
+    .card { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 1rem; }
+    .filter { margin-bottom: 1rem; }
+    input { padding: 0.5rem; width: 300px; }
+    canvas { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <h1>In A Minnit – Lead Dashboard</h1>
+
+  <div class="section">
+    <h2>🔍 Filter</h2>
+    <input type="text" id="search" placeholder="Search anything..." />
+  </div>
+
+  <div class="section">
+    <h2>📊 Provider Type Breakdown</h2>
+    <canvas id="providerTypeChart"></canvas>
+  </div>
+
+  <div class="section">
+    <h2>🏢 Potential Clients</h2>
+    <div id="clients"></div>
+  </div>
+
+  <div class="section">
+    <h2>📄 Tender Opportunities</h2>
+    <div id="tenders"></div>
+  </div>
+
+  <div class="section">
+    <h2>🧠 OT Practices</h2>
+    <div id="ots"></div>
+  </div>
+
+  <script>
+    async function fetchData() {
+      const res = await fetch('data.json');
+      return await res.json();
+    }
+
+    function renderSection(data, containerId, mapper) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = data.map(mapper).join('');
+    }
+
+    function highlightText(text, query) {
+      if (!query) return text;
+      const re = new RegExp(query, 'gi');
+      return text.replace(re, match => `<mark>${match}</mark>`);
+    }
+
+    function render() {
+      fetchData().then(data => {
+        const searchBox = document.getElementById('search');
+        const applyFilters = () => {
+          const query = searchBox.value.trim().toLowerCase();
+
+          const filteredClients = data.NewPotentialClients.filter(c => JSON.stringify(c).toLowerCase().includes(query));
+          const filteredTenders = data.TenderOpportunities.filter(t => JSON.stringify(t).toLowerCase().includes(query));
+          const filteredOTs = data.OTPractices.filter(o => JSON.stringify(o).toLowerCase().includes(query));
+
+          renderSection(filteredClients, 'clients', c => `
+            <div class="card">
+              <strong>${highlightText(c.ProviderName, query)}</strong> — ${highlightText(c.Region, query)}<br>
+              Type: ${highlightText(c.Type, query)} | Clients: ${highlightText(c.EstimatedClients, query)}<br>
+              <em>${highlightText(c.Rationale, query)}</em><br>
+              Contact: ${highlightText(c.DecisionMaker.Name, query)} (${highlightText(c.DecisionMaker.Title, query)})<br>
+              <a href="mailto:${c.DecisionMaker.Email}">${c.DecisionMaker.Email}</a> | 
+              <a href="${c.DecisionMaker.LinkedIn}" target="_blank">LinkedIn</a>
+            </div>
+          `);
+
+          renderSection(filteredTenders, 'tenders', t => `
+            <div class="card">
+              <strong>${highlightText(t.Title, query)}</strong> (${highlightText(t.ReferenceID, query)})<br>
+              Buyer: ${highlightText(t.Buyer, query)}<br>
+              ${highlightText(t.Description, query)}<br>
+              Dates: ${t.OpenDate} – ${t.CloseDate}<br>
+              <a href="${t.Link}" target="_blank">View Tender</a>
+            </div>
+          `);
+
+          renderSection(filteredOTs, 'ots', o => `
+            <div class="card">
+              <strong>${highlightText(o.PracticeName, query)}</strong> — ${highlightText(o.Region, query)}<br>
+              OTs: ${highlightText(o.OTCount, query)}<br>
+              Contact: ${highlightText(o.Contact.Name, query)}<br>
+              <a href="mailto:${o.Contact.Email}">${o.Contact.Email}</a> | Phone: ${highlightText(o.Contact.Phone, query)}
+            </div>
+          `);
+
+          // Chart update
+          const typeCounts = _.countBy(filteredClients, 'Type');
+          const chartData = {
+            labels: Object.keys(typeCounts),
+            datasets: [{
+              label: 'Providers by Type',
+              data: Object.values(typeCounts),
+              backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#FF5722']
+            }]
+          };
+          providerChart.data = chartData;
+          providerChart.update();
+        };
+
+        searchBox.addEventListener('input', _.debounce(applyFilters, 200));
+        applyFilters();
+      });
+    }
+
+    const providerChart = new Chart(document.getElementById('providerTypeChart').getContext('2d'), {
+      type: 'bar',
+      data: { labels: [], datasets: [] },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false }, title: { display: true, text: 'Providers by Type' } }
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
