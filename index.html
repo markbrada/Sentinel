@@ -16,7 +16,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    /* Smooth dark-mode transition */
+    /* Smooth dark‑mode transition */
     *{transition:background-color .2s ease,color .2s ease;}
     ::selection{background:#3b82f6; color:white;}
     summary::-webkit-details-marker{display:none;}
@@ -42,7 +42,7 @@
       <div id="kpiClients" class="text-3xl font-semibold">–</div>
     </div>
     <div class="rounded-lg p-4 bg-amber-500/10 dark:bg-amber-400/20">
-      <div class="text-sm">Tenders ≤ 14 days</div>
+      <div class="text-sm">Tenders ≤ 14 days</div>
       <div id="kpiTenders" class="text-3xl font-semibold">–</div>
     </div>
     <div class="rounded-lg p-4 bg-purple-500/10 dark:bg-purple-400/20">
@@ -56,16 +56,18 @@
     <h2 class="font-semibold text-lg">Filter New Clients</h2>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div>
-        <label class="block text-sm mb-1" for="regionFilter">Region</label>
-        <select id="regionFilter" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 h-28"></select>
+        <label class="block text-sm mb-1">Region</label>
+        <div id="regionFilter" class="space-y-1 max-h-28 overflow-auto border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-800">
+          <!-- checkboxes injected via JS -->
+        </div>
       </div>
       <div>
-        <label class="block text-sm mb-1" for="typeFilter">Provider Type</label>
-        <select id="typeFilter" multiple class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 h-28">
-          <option>Support At Home Program Provider</option>
-          <option>NDIS</option>
-          <option>Other</option>
-        </select>
+        <label class="block text-sm mb-1">Provider Type</label>
+        <div id="typeFilter" class="space-y-1 max-h-28 overflow-auto border border-gray-300 dark:border-gray-600 rounded p-2 bg-white dark:bg-gray-800">
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="Support At Home Program Provider" class="form-checkbox"> Support At Home Program Provider</label>
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="NDIS" class="form-checkbox"> NDIS</label>
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" value="Other" class="form-checkbox"> Other</label>
+        </div>
       </div>
       <div>
         <label class="block text-sm mb-1" for="searchBox">Search</label>
@@ -94,13 +96,13 @@
     <div id="otGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </section>
 
-  <footer class="text-center text-xs py-4 opacity-70">© 2025 In A Minnit</footer>
+  <footer class="text-center text-xs py-4 opacity-70">© 2025 In A Minnit</footer>
 
   <!--============== Script ==============-->
   <script>
     feather.replace();
 
-    /* Dark-mode persistence */
+    /* Dark‑mode persistence */
     const root=document.documentElement; const darkStored=localStorage.getItem('iam-dark'); if(darkStored==='true') root.classList.add('dark');
     document.getElementById('toggleDark').onclick=()=>{root.classList.toggle('dark'); localStorage.setItem('iam-dark',root.classList.contains('dark'))};
 
@@ -115,8 +117,8 @@
 
     /* Render functions */
     function renderClients(){
-      const regionSel=[...qs('#regionFilter').selectedOptions].map(o=>o.value);
-      const typeSel=[...qs('#typeFilter').selectedOptions].map(o=>o.value);
+      const regionSel=qsa('#regionFilter input:checked').map(cb=>cb.value);
+      const typeSel=qsa('#typeFilter input:checked').map(cb=>cb.value);
       const term=qs('#searchBox').value.toLowerCase();
       const grid=qs('#clientGrid'); grid.innerHTML='';
       clients.filter(c=>{
@@ -144,7 +146,7 @@
                 ${c.DecisionMaker.Email?`<a href='mailto:${c.DecisionMaker.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>Email</a>`:''}
                 ${c.DecisionMaker.LinkedIn?`<a href='${c.DecisionMaker.LinkedIn}' target='_blank' class='underline flex items-center gap-1'><i data-feather='linkedin' class='w-4'></i>LinkedIn</a>`:''}
               </div>
-              <div>Sources: ${getProp(c,'Sources','SourceURLs',"source")?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>
+              <div>Sources: ${getProp(c,'Sources','SourceURLs','source')?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>
             </div>
           </details>`;
         grid.appendChild(card);
@@ -159,18 +161,11 @@
         const badge=days<=3?'bg-red-600':days<=10?'bg-amber-500':'bg-emerald-600';
         const card=document.createElement('article');
         card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
-        card.innerHTML=`
-          <h3 class='font-semibold mb-1'>${t.Title}</h3>
+        card.innerHTML=`<h3 class='font-semibold mb-1'>${t.Title}</h3>
           <div class='text-xs mb-2 opacity-70'>${t.Buyer}</div>
-          <div class='flex items-center gap-2 text-sm mb-3'>
-            <span class='px-2 py-0.5 rounded text-white ${badge}'>Closes ${t.CloseDate}</span>
-            <span class='opacity-80'>${t.Relevance||t.CategoryCode||''}</span>
-          </div>
+          <div class='flex items-center gap-2 text-sm mb-3'><span class='px-2 py-0.5 rounded text-white ${badge}'>Closes ${t.CloseDate}</span><span class='opacity-80'>${t.Relevance||t.CategoryCode||''}</span></div>
           <p class='text-sm mb-3'>${t.Description||''}</p>
-          <div class='flex gap-4'>
-            <a href='${getProp(t,'Link','TenderLink')}' target='_blank' class='underline flex items-center gap-1'><i data-feather='external-link' class='w-4'></i>Open</a>
-            <span class='text-xs'>Sources: ${getProp(t,'Sources','SourceURLs')?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</span>
-          </div>`;
+          <div class='flex gap-4'><a href='${getProp(t,'Link','TenderLink')}' target='_blank' class='underline flex items-center gap-1'><i data-feather='external-link' class='w-4'></i>Open</a><span class='text-xs'>Sources: ${getProp(t,'Sources','SourceURLs')?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</span></div>`;
         wrap.appendChild(card);
       });
       feather.replace();
@@ -181,46 +176,7 @@
       ots.forEach(o=>{
         const card=document.createElement('article');
         card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
-        card.innerHTML=`
-          <h3 class='font-semibold mb-1'>${o.PracticeName}</h3>
+        card.innerHTML=`<h3 class='font-semibold mb-1'>${o.PracticeName}</h3>
           <div class='text-xs mb-2 opacity-70'>${o.Region}</div>
           <div class='text-sm mb-3'>OTs: <span class='font-medium'>${o.OTCount}</span></div>
-          <div class='flex flex-col gap-1 text-sm'>
-            ${o.Contact.Phone?`<a href='tel:${o.Contact.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>${o.Contact.Phone}</a>`:''}
-            ${o.Contact.Email?`<a href='mailto:${o.Contact.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>${o.Contact.Email}</a>`:''}
-          </div>
-          <div class='mt-2 text-xs'>Sources: ${o.Sources?.map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>`;
-        grid.appendChild(card);
-      });
-      feather.replace();
-    }
-
-    /* Load JSON */
-    fetch('data.json').then(r=>r.json()).then(d=>{
-      clients=d.NewPotentialClients||[]; tenders=d.TenderOpportunities||[]; ots=d.OTPractices||[];
-
-      // KPI counts
-      qs('#kpiClients').textContent=clients.length;
-      qs('#kpiOT').textContent=ots.length;
-      qs('#kpiTenders').textContent=tenders.filter(t=>((new Date(t.CloseDate)-Date.now())/864e5)<=14).length;
-
-      // Region filter options
-      const regions=[...new Set(clients.flatMap(c=>c.Region.match(stateRegex)||[]))].sort();
-      const regionSelect=qs('#regionFilter'); regions.forEach(r=>{const opt=document.createElement('option'); opt.textContent=opt.value=r; regionSelect.appendChild(opt);});
-
-      renderClients(); renderTenders(); renderOT();
-    });
-
-    // Filter events
-    qsa('#regionFilter,#typeFilter').forEach(el=>el.addEventListener('change',renderClients));
-    qs('#searchBox').addEventListener('input',renderClients);
-    qs('#resetBtn').onclick=()=>{qsa('#regionFilter option:selected,#typeFilter option:selected').forEach(o=>o.selected=false); qs('#searchBox').value=''; renderClients();};
-
-    // PDF export (simple print-to-pdf)
-    qs('#downloadPdf').classList.remove('hidden');
-    qs('#downloadPdf').onclick=()=>{
-      html2pdf().from(document.body).set({margin:0.2,filename:'IAM-Sentinel.pdf',html2canvas:{scale:2}}).save();
-    };
-  </script>
-</body>
-</html>
+          <div class='flex flex-col gap-1 text-sm'>${o.Contact.Phone?`<a href='tel:${o.Contact.Phone.replace(/\s/g,'')}' class='underline flex...
