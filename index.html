@@ -1,135 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>In A Minnit – Lead Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lodash"></script>
+  <title>IAM Sentinel – Lead Intelligence Dashboard</title>
+  <!-- TailwindCSS CDN (v3) -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script>
+    /* --- Tailwind dark-mode setup (class strategy) --- */
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sentinel: {
+              DEFAULT: '#1C64F2',     /* IAM brand blue – tweak as desired */
+              dark: '#1A4ABF'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Tabulator -->
+  <link href="https://unpkg.com/tabulator-tables@5.6/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/tabulator-tables@5.6/dist/js/tabulator.min.js"></script>
+  <!-- pdfmake (for Tabulator PDF export) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <!-- Feather icons (lightweight) -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Leaflet (heat-map / circles) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Day.js for date parsing -->
+  <script src="https://unpkg.com/dayjs@1/dayjs.min.js"></script>
   <style>
-    body { font-family: sans-serif; margin: 2rem; background: #f9f9f9; }
-    h1 { font-size: 2rem; margin-bottom: 1rem; }
-    .section { margin-top: 2rem; }
-    .card { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 1rem; }
-    .filter { margin-bottom: 1rem; }
-    input { padding: 0.5rem; width: 300px; }
-    canvas { max-width: 100%; height: auto; }
+    /* Let Tabulator fill flex container */
+    #client-table, #tender-table, #ot-table { height: 60vh; }
   </style>
 </head>
-<body>
-  <h1>In A Minnit – Lead Dashboard</h1>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex h-screen overflow-hidden">
+  <!-- ============== Sidebar ============== -->
+  <aside id="sidebar" class="w-72 shrink-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+    <!-- Brand -->
+    <div class="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sentinel" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" /></svg>
+      <span class="font-semibold text-lg">IAM Sentinel</span>
+    </div>
 
-  <div class="section">
-    <h2>🔍 Filter</h2>
-    <input type="text" id="search" placeholder="Search anything..." />
-  </div>
+    <!-- Filters -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-6">
+      <!-- Region filter -->
+      <div>
+        <label class="block mb-1 text-sm font-medium">Region</label>
+        <select id="filter-region" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" multiple>
+          <!-- options injected -->
+        </select>
+      </div>
+      <!-- Type filter -->
+      <div>
+        <label class="block mb-1 text-sm font-medium">Provider Type</label>
+        <select id="filter-type" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" multiple>
+          <option>Support At Home Program Provider</option>
+          <option>NDIS</option>
+          <option>Other</option>
+        </select>
+      </div>
 
-  <div class="section">
-    <h2>📊 Provider Type Breakdown</h2>
-    <canvas id="providerTypeChart"></canvas>
-  </div>
+      <!-- Search -->
+      <div>
+        <label class="block mb-1 text-sm font-medium">Search name / rationale</label>
+        <input id="filter-search" type="search" placeholder="Search…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600" />
+      </div>
 
-  <div class="section">
-    <h2>🏢 Potential Clients</h2>
-    <div id="clients"></div>
-  </div>
+      <button id="filter-reset" class="px-3 py-2 w-full bg-gray-200 dark:bg-gray-700 rounded text-sm">Reset filters</button>
 
-  <div class="section">
-    <h2>📄 Tender Opportunities</h2>
-    <div id="tenders"></div>
-  </div>
+      <hr class="border-gray-200 dark:border-gray-700"/>
 
-  <div class="section">
-    <h2>🧠 OT Practices</h2>
-    <div id="ots"></div>
-  </div>
+      <!-- Dark-mode toggle -->
+      <button id="toggle-dark" class="flex items-center gap-2 text-sm px-3 py-2 w-full rounded bg-sentinel/10 dark:bg-sentinel.dark/20">
+        <i data-feather="moon"></i>
+        <span>Toggle dark mode</span>
+      </button>
+    </div>
+  </aside>
 
+  <!-- ============== Main content ============== -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <!-- KPI bar -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div class="p-4 rounded bg-sentinel/10 dark:bg-sentinel.dark/20">
+        <div class="text-sm">New Potential Clients</div>
+        <div id="kpi-clients" class="text-3xl font-semibold">–</div>
+      </div>
+      <div class="p-4 rounded bg-emerald-500/10 dark:bg-emerald-400/20">
+        <div class="text-sm">Tenders closing ≤ 14 days</div>
+        <div id="kpi-tenders" class="text-3xl font-semibold">–</div>
+      </div>
+      <div class="p-4 rounded bg-purple-500/10 dark:bg-purple-400/20">
+        <div class="text-sm">OT Practices</div>
+        <div id="kpi-ot" class="text-3xl font-semibold">–</div>
+      </div>
+    </section>
+
+    <!-- Map -->
+    <section class="p-4">
+      <h2 class="font-semibold mb-2">Client Distribution Map</h2>
+      <div id="map" class="w-full h-72 rounded shadow"></div>
+    </section>
+
+    <!-- Tables tabs -->
+    <section class="p-4 flex flex-col gap-6 overflow-y-auto">
+      <!-- New potential clients table -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="font-semibold text-lg">New Potential Clients</h2>
+          <div class="flex gap-2">
+            <button id="btn-download-clients" class="text-sm px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700">Export PDF</button>
+          </div>
+        </div>
+        <div id="client-table" class="rounded shadow border border-gray-200 dark:border-gray-700"></div>
+      </div>
+
+      <!-- Tender opportunities table -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="font-semibold text-lg">Tender Opportunities</h2>
+          <button id="btn-download-tenders" class="text-sm px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700">Export PDF</button>
+        </div>
+        <div id="tender-table" class="rounded shadow border border-gray-200 dark:border-gray-700"></div>
+      </div>
+
+      <!-- OT practices table -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="font-semibold text-lg">OT Practices</h2>
+          <button id="btn-download-ot" class="text-sm px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700">Export PDF</button>
+        </div>
+        <div id="ot-table" class="rounded shadow border border-gray-200 dark:border-gray-700"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============== Main script ============== -->
   <script>
-    async function fetchData() {
-      const res = await fetch('data.json');
-      return await res.json();
-    }
+    feather.replace(); // load icons
 
-    function renderSection(data, containerId, mapper) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = data.map(mapper).join('');
-    }
+    /* ---- Dark mode toggle ---- */
+    const darkToggle = document.getElementById('toggle-dark');
+    darkToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('iam-dark', document.documentElement.classList.contains('dark'));
+    });
+    if (localStorage.getItem('iam-dark') === 'true') document.documentElement.classList.add('dark');
 
-    function highlightText(text, query) {
-      if (!query) return text;
-      const re = new RegExp(query, 'gi');
-      return text.replace(re, match => `<mark>${match}</mark>`);
-    }
+    /* ---- State coordinate helper (rough centroids) ---- */
+    const stateCoords = { 'VIC': [-37.0, 144.0], 'NSW': [-33.0, 147.0], 'QLD': [-22.5, 145.0], 'SA': [-30.0, 135.0], 'WA': [-25.0, 121.0], 'TAS': [-42.0, 147.0], 'ACT': [-35.4, 149.1], 'NT': [-19.0, 133.0] };
 
-    function render() {
-      fetchData().then(data => {
-        const searchBox = document.getElementById('search');
-        const applyFilters = () => {
-          const query = searchBox.value.trim().toLowerCase();
+    /* ---- Leaflet map ---- */
+    const map = L.map('map', { scrollWheelZoom:false }).setView([-25, 134], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    let mapLayerGroup = L.layerGroup().addTo(map);
 
-          const filteredClients = data.NewPotentialClients.filter(c => JSON.stringify(c).toLowerCase().includes(query));
-          const filteredTenders = data.TenderOpportunities.filter(t => JSON.stringify(t).toLowerCase().includes(query));
-          const filteredOTs = data.OTPractices.filter(o => JSON.stringify(o).toLowerCase().includes(query));
-
-          renderSection(filteredClients, 'clients', c => `
-            <div class="card">
-              <strong>${highlightText(c.ProviderName, query)}</strong> — ${highlightText(c.Region, query)}<br>
-              Type: ${highlightText(c.Type, query)} | Clients: ${highlightText(c.EstimatedClients, query)}<br>
-              <em>${highlightText(c.Rationale, query)}</em><br>
-              Contact: ${highlightText(c.DecisionMaker.Name, query)} (${highlightText(c.DecisionMaker.Title, query)})<br>
-              <a href="mailto:${c.DecisionMaker.Email}">${c.DecisionMaker.Email}</a> | 
-              <a href="${c.DecisionMaker.LinkedIn}" target="_blank">LinkedIn</a>
-            </div>
-          `);
-
-          renderSection(filteredTenders, 'tenders', t => `
-            <div class="card">
-              <strong>${highlightText(t.Title, query)}</strong> (${highlightText(t.ReferenceID, query)})<br>
-              Buyer: ${highlightText(t.Buyer, query)}<br>
-              ${highlightText(t.Description, query)}<br>
-              Dates: ${t.OpenDate} – ${t.CloseDate}<br>
-              <a href="${t.Link}" target="_blank">View Tender</a>
-            </div>
-          `);
-
-          renderSection(filteredOTs, 'ots', o => `
-            <div class="card">
-              <strong>${highlightText(o.PracticeName, query)}</strong> — ${highlightText(o.Region, query)}<br>
-              OTs: ${highlightText(o.OTCount, query)}<br>
-              Contact: ${highlightText(o.Contact.Name, query)}<br>
-              <a href="mailto:${o.Contact.Email}">${o.Contact.Email}</a> | Phone: ${highlightText(o.Contact.Phone, query)}
-            </div>
-          `);
-
-          // Chart update
-          const typeCounts = _.countBy(filteredClients, 'Type');
-          const chartData = {
-            labels: Object.keys(typeCounts),
-            datasets: [{
-              label: 'Providers by Type',
-              data: Object.values(typeCounts),
-              backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#FF5722']
-            }]
-          };
-          providerChart.data = chartData;
-          providerChart.update();
-        };
-
-        searchBox.addEventListener('input', _.debounce(applyFilters, 200));
-        applyFilters();
+    function refreshMap(clients){
+      mapLayerGroup.clearLayers();
+      clients.forEach(c => {
+        const stateMatch = c.Region.match(/[A-Z]{2,3}/);
+        if(!stateMatch) return;
+        const coord = stateCoords[stateMatch[0].trim()];
+        if(!coord) return;
+        const est = parseInt(c.EstimatedClients) || 50;
+        L.circleMarker(coord, {
+          radius: 4 + Math.sqrt(est)/5,
+          fillColor: '#3b82f6',
+          color: '#1e40af',
+          weight: 1,
+          fillOpacity: 0.6
+        }).bindPopup(`<strong>${c.ProviderName}</strong><br>${c.Region}<br>Est. ${c.EstimatedClients}`).addTo(mapLayerGroup);
       });
     }
 
-    const providerChart = new Chart(document.getElementById('providerTypeChart').getContext('2d'), {
-      type: 'bar',
-      data: { labels: [], datasets: [] },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false }, title: { display: true, text: 'Providers by Type' } }
-      }
-    });
+    /* ---- Load data ---- */
+    fetch('data.json')
+      .then(r => r.json())
+      .then(data => {
+        const clientsRaw = data.NewPotentialClients;
+        const tendersRaw = data.TenderOpportunities;
+        const otRaw = data.OTPractices;
 
-    render();
+        /* --- KPI widgets --- */
+        document.getElementById('kpi-clients').textContent = clientsRaw.length;
+        document.getElementById('kpi-ot').textContent = otRaw.length;
+        const soonCount = tendersRaw.filter(t => {
+          const d = dayjs(t.CloseDate, 'DD MMM YYYY');
+          return d.diff(dayjs(), 'day') <= 14;
+        }).length;
+        document.getElementById('kpi-tenders').textContent = soonCount;
+
+        /* --- Region dropdown options --- */
+        const regionSet = new Set(clientsRaw.flatMap(c => c.Region.split(/[,&]/).map(s => s.trim().match(/[A-Z]{2,3}/)?.[0]).filter(Boolean)));
+        const regionSelect = document.getElementById('filter-region');
+        [...regionSet].sort().forEach(state => {
+          const opt = document.createElement('option');
+          opt.value = state;
+          opt.textContent = state;
+          regionSelect.appendChild(opt);
+        });
+
+        /* ---- Filter logic ---- */
+        const filters = { region:[], type:[], search:'' };
+        regionSelect.addEventListener('change', ()=>{
+          filters.region = Array.from(regionSelect.selectedOptions).map(o=>o.value);
+          tableFilter();
+        });
+        const typeSelect = document.getElementById('filter-type');
+        typeSelect.addEventListener('change', ()=>{
+          filters.type = Array.from(typeSelect.selectedOptions).map(o=>o.value);
+          tableFilter();
+        });
+        document.getElementById('filter-search').addEventListener('input', e => {
+          filters.search = e.target.value.toLowerCase();
+          tableFilter();
+        });
+        document.getElementById('filter-reset').addEventListener('click', () => {
+          regionSelect.selectedIndex = -1; typeSelect.selectedIndex = -1; document.getElementById('filter-search').value='';
+          filters.region=[]; filters.type=[]; filters.search='';
+          tableFilter();
+        });
+
+        /* ---- Tabulator tables ---- */
+        const clientTable = new Tabulator('#client-table', {
+          layout:"fitColumns",
+          data: clientsRaw,
+          pagination:"local",
+          paginationSize:10,
+          columns:[
+            {title:"Provider", field:"ProviderName", headerFilter:"input"},
+            {title:"Type", field:"Type"},
+            {title:"Region", field:"Region"},
+            {title:"Estimated", field:"EstimatedClients", sorter:"number"},
+            {title:"Contact", formatter:(cell)=>{
+              const person = cell.getRow().getData().DecisionMaker;
+              return `<div class='flex flex-col'>${person.Name}<span class='text-xs opacity-70'>${person.Title}</span></div>`;
+            }},
+            {title:"Phone", formatter:(cell)=>{
+              const phone = cell.getRow().getData().DecisionMaker.Phone || '';
+              return phone ? `<a href='tel:${phone.replace(/\s/g,'')}' title='Click to call'>📞</a>` : '';
+            }, width:60, hozAlign:'center'},
+            {title:"Email", formatter:(cell)=>{
+              const email = cell.getRow().getData().DecisionMaker.Email || '';
+              return email ? `<a href='mailto:${email}' title='Email'>✉️</a>` : '';
+            }, width:60, hozAlign:'center'},
+          ],
+          rowFormatter:function(row){
+            const holder = document.createElement('div');
+            holder.classList.add('p-2','bg-gray-50','dark:bg-gray-800');
+            const data = row.getData();
+            holder.innerHTML = `<div class='text-sm mb-1'><strong>Rationale:</strong> ${data.Rationale}</div>` +
+              `<div class='text-xs italic'>Sources: ${data.Sources.map(u=>`<a href='${u}' target='_blank' class='underline text-sentinel'>link</a>`).join(', ')}</div>`;
+            row.getElement().appendChild(holder);
+          }
+        });
+
+        const tenderTable = new Tabulator('#tender-table', {
+          layout:"fitColumns",
+          data:tendersRaw,
+          pagination:"local",
+          paginationSize:5,
+          columns:[
+            {title:"Title", field:"Title", widthGrow:2},
+            {title:"Buyer", field:"Buyer"},
+            {title:"Close", field:"CloseDate", sorter:(a,b)=>dayjs(a,'DD MMM YYYY').toDate()-dayjs(b,'DD MMM YYYY').toDate(), formatter:(cell)=>{
+              const days = dayjs(cell.getValue(),'DD MMM YYYY').diff(dayjs(),'day');
+              const badge = days<=3?'bg-red-500':days<=10?'bg-amber-400':'bg-emerald-500';
+              return `<span class='px-2 py-0.5 rounded text-xs text-white ${badge}'>${cell.getValue()}</span>`;
+            }},
+            {title:"Category", field:"Relevance"},
+            {title:"Link", formatter:(cell)=>`<a href='${cell.getRow().getData().Link}' target='_blank' class='underline text-sentinel'>Open</a>`, width:70}
+          ]
+        });
+
+        const otTable = new Tabulator('#ot-table', {
+          layout:"fitColumns",
+          data:otRaw,
+          pagination:"local",
+          paginationSize:5,
+          columns:[
+            {title:"Practice", field:"PracticeName", widthGrow:2},
+            {title:"Region", field:"Region"},
+            {title:"OTs", field:"OTCount", sorter:"number"},
+            {title:"Email", formatter:(cell)=>{
+              const e=cell.getRow().getData().Contact.Email; return e?`<a href='mailto:${e}' class='underline'>${e}</a>`:'';}, widthGrow:2},
+            {title:"Phone", formatter:(cell)=>cell.getRow().getData().Contact.Phone||''}
+          ]
+        });
+
+        /* ---- Filtering function applied to client table ---- */
+        function tableFilter(){
+          clientTable.clearFilter();
+          if(filters.region.length){
+            clientTable.addFilter("Region", "like", filters.region.map(r=>r).join("|"), { regex:true });
+          }
+          if(filters.type.length){
+            clientTable.addFilter("Type", "in", filters.type);
+          }
+          if(filters.search){
+            clientTable.addFilter([ // OR filters
+              {field:"ProviderName", type:"like", value:filters.search},
+              {field:"Rationale", type:"like", value:filters.search}
+            ], "or");
+          }
+          refreshMap(clientTable.getData());
+        }
+        tableFilter();
+
+        /* ---- Export buttons ---- */
+        document.getElementById('btn-download-clients').addEventListener('click', ()=>clientTable.download('pdf','clients.pdf', { orientation:'landscape', title:'IAM Sentinel – Clients'}));
+        document.getElementById('btn-download-tenders').addEventListener('click', ()=>tenderTable.download('pdf','tenders.pdf', { title:'IAM Sentinel – Tenders'}));
+        document.getElementById('btn-download-ot').addEventListener('click', ()=>otTable.download('pdf','ot-practices.pdf', { title:'IAM Sentinel – OT Practices'}));
+
+      });
   </script>
 </body>
 </html>
