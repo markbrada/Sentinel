@@ -1,215 +1,184 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IAM Sentinel – Leads Explorer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support‑at‑Home Leads Dashboard</title>
 
-  <!-- TailwindCSS -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <script>tailwind.config={darkMode:'class'}</script>
-
-  <!-- Feather icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
-
-  <!-- html2pdf for PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QZ6WDaQZZr+AtlZg9p7++9M1u9R6JvccM4WprqbiMXp59S+gXxBnhLK8bzqom0nM" crossorigin="anonymous">
+  <!-- DataTables + Bootstrap 5 skin -->
+  <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
   <style>
-    *{transition:background-color .2s ease,color .2s ease}
-    ::selection{background:#3b82f6;color:white}
-    summary::-webkit-details-marker{display:none}
+    body { background:#f8f9fb; font-family: "Helvetica Neue", Arial, sans-serif; }
+    h1 { font-weight:600; }
+    .stat‑card { min-width:200px; }
+    .tab‑content { margin-top:1rem; }
+    table.dataTable tbody tr:hover { background:#eef6ff; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-  <!-- Top bar -->
-  <nav class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-    <div class="flex items-center gap-2 text-lg font-semibold">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
-      IAM&nbsp;Sentinel
-    </div>
-    <div class="flex items-center gap-4 text-sm">
-      <button id="downloadPdf" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
-        <i data-feather="download" class="w-4"></i><span>Export PDF</span>
-      </button>
-      <button id="toggleDark" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i data-feather="moon"></i></button>
-    </div>
-  </nav>
+<body>
+<div class="container py-4">
+  <h1 class="mb-4">Support‑at‑Home Leads Dashboard</h1>
 
-  <!-- KPI tiles -->
-  <section class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="rounded-lg p-4 bg-blue-500/10 dark:bg-blue-400/20">
-      <div class="text-sm">New Clients</div>
-      <div id="kpiClients" class="text-3xl font-semibold">–</div>
-    </div>
-    <div class="rounded-lg p-4 bg-amber-500/10 dark:bg-amber-400/20">
-      <div class="text-sm">Tenders ≤ 14 days</div>
-      <div id="kpiTenders" class="text-3xl font-semibold">–</div>
-    </div>
-    <div class="rounded-lg p-4 bg-purple-500/10 dark:bg-purple-400/20">
-      <div class="text-sm">OT Practices</div>
-      <div id="kpiOT" class="text-3xl font-semibold">–</div>
-    </div>
-  </section>
-
-  <!-- Filters -->
-  <section class="px-4 space-y-6 max-w-screen-lg mx-auto">
-    <h2 class="font-semibold text-lg">Filters</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <!-- Region checkboxes -->
-      <div>
-        <span class="block text-sm mb-2">Region</span>
-        <div id="regionFilter" class="space-y-1 h-32 overflow-auto p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded"></div>
-      </div>
-      <!-- Type checkboxes -->
-      <div>
-        <span class="block text-sm mb-2">Provider Type</span>
-        <div id="typeFilter" class="space-y-1 h-32 overflow-auto p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded">
-          <label class="inline-flex items-center"><input type="checkbox" value="Support At Home Program Provider" class="mr-2"><span class="text-sm">Support At Home</span></label><br>
-          <label class="inline-flex items-center"><input type="checkbox" value="NDIS" class="mr-2"><span class="text-sm">NDIS</span></label><br>
-          <label class="inline-flex items-center"><input type="checkbox" value="Other" class="mr-2"><span class="text-sm">Other</span></label>
+  <!-- Headline stats  -->
+  <div class="row g-3 mb-4" id="headlineStats">
+    <div class="col-12 col-md-4">
+      <div class="card stat‑card shadow-sm text-center">
+        <div class="card-body">
+          <h2 id="clientsCount" class="display-6">0</h2>
+          <p class="mb-0">Potential Clients</p>
         </div>
       </div>
-      <!-- Search -->
-      <div>
-        <span class="block text-sm mb-2">Search</span>
-        <input id="searchBox" type="search" placeholder="Name or rationale…" class="w-full rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 p-2" />
-        <button id="resetBtn" class="mt-2 px-3 py-1.5 w-full rounded bg-gray-200 dark:bg-gray-700 text-sm">Reset</button>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card stat‑card shadow-sm text-center">
+        <div class="card-body">
+          <h2 id="tendersCount" class="display-6">0</h2>
+          <p class="mb-0">Tender Opportunities</p>
+        </div>
       </div>
     </div>
-  </section>
-
-  <!-- Clients grid -->
-  <section class="px-4 py-8 max-w-screen-lg mx-auto">
-    <div id="clientGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-  </section>
-
-  <!-- Tenders -->
-  <section class="px-4 py-6 bg-gray-100 dark:bg-gray-800/40">
-    <div class="max-w-screen-lg mx-auto">
-      <h2 class="font-semibold text-lg mb-4">Tender Opportunities</h2>
-      <div id="tenderList" class="space-y-4"></div>
+    <div class="col-12 col-md-4">
+      <div class="card stat‑card shadow-sm text-center">
+        <div class="card-body">
+          <h2 id="otCount" class="display-6">0</h2>
+          <p class="mb-0">OT Practices</p>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <!-- OT Practices -->
-  <section class="px-4 py-6 max-w-screen-lg mx-auto">
-    <h2 class="font-semibold text-lg mb-4">OT Practices</h2>
-    <div id="otGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-  </section>
+  <!-- Tabs -->
+  <ul class="nav nav-tabs" id="leadsTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="clients-tab" data-bs-toggle="tab" data-bs-target="#clients" type="button" role="tab">Clients</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tenders-tab" data-bs-toggle="tab" data-bs-target="#tenders" type="button" role="tab">Tenders</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="ot-tab" data-bs-toggle="tab" data-bs-target="#ot" type="button" role="tab">OT Practices</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="leadsTabsContent">
+    <div class="tab-pane fade show active" id="clients" role="tabpanel">
+      <div class="table-responsive">
+        <table id="clientsTable" class="table table-striped table-bordered w-100"></table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="tenders" role="tabpanel">
+      <div class="table-responsive">
+        <table id="tendersTable" class="table table-striped table-bordered w-100"></table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="ot" role="tabpanel">
+      <div class="table-responsive">
+        <table id="otTable" class="table table-striped table-bordered w-100"></table>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <footer class="text-center text-xs py-4 opacity-70">© 2025 In A Minnit</footer>
+<!-- jQuery, Bootstrap & DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-no0ev5LbphmBnT7F5JBLVvXH2zqu14WwfLVSv3Dpt+c8YmlnqsXehgHDPvFzpw5y" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
-  <!-- Script -->
-  <script>
-    feather.replace();
-    const root=document.documentElement;
-    if(localStorage.getItem('iam-dark')==='true') root.classList.add('dark');
-    document.getElementById('toggleDark').onclick=function(){root.classList.toggle('dark');localStorage.setItem('iam-dark',root.classList.contains('dark'))};
+<script>
+(async function () {
+  try {
+    const resp = await fetch('data.json');
+    if (!resp.ok) throw new Error('Unable to load data.json');
+    const data = await resp.json();
 
-    let clients=[], tenders=[], ots=[];
-    const qs=s=>document.querySelector(s), qsa=s=>Array.from(document.querySelectorAll(s));
-    const stateRegex=/[A-Z]{2,3}/g;
-    const getSrc=(o)=>o.Sources||o.SourceURLs||[];
-    const getEst=(o)=>o.EstimatedClients||o.EstimatedClientCount||o.EstimatedClient||'n/a';
+    // Headline stats
+    document.getElementById('clientsCount').textContent = data.NewPotentialClients?.length ?? 0;
+    document.getElementById('tendersCount').textContent = data.TenderOpportunities?.length ?? 0;
+    document.getElementById('otCount').textContent = data.OTPractices?.length ?? 0;
 
-    function renderClients(){
-      const selectedRegions=qsa('#regionFilter input:checked').map(cb=>cb.value);
-      const selectedTypes=qsa('#typeFilter input:checked').map(cb=>cb.value);
-      const term=qs('#searchBox').value.toLowerCase();
-      const container=qs('#clientGrid'); container.innerHTML='';
-      clients.filter(c=>{
-        const regionOk=!selectedRegions.length||selectedRegions.some(r=>c.Region.includes(r));
-        const typeOk=!selectedTypes.length||selectedTypes.includes(c.Type);
-        const searchOk=!term||c.ProviderName.toLowerCase().includes(term)||c.Rationale.toLowerCase().includes(term);
-        return regionOk&&typeOk&&searchOk;
-      }).forEach(c=>{
-        const card=document.createElement('article'); card.className='rounded-lg shadow bg-white dark:bg-gray-800 flex flex-col';
-        card.innerHTML=`
-          <div class='p-4 flex-1 flex flex-col'>
-            <h3 class='font-semibold mb-1'>${c.ProviderName}</h3>
-            <div class='text-xs mb-2 opacity-70'>${c.Type} · ${c.Region}</div>
-            <div class='text-sm mb-4'>Est. clients: <span class='font-medium'>${getEst(c)}</span></div>
-            <p class='text-sm flex-1'>${c.Rationale}</p>
-          </div>
-          <details class='border-t border-gray-200 dark:border-gray-700'>
-            <summary class='px-4 py-2 cursor-pointer flex items-center gap-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700'>Contact & sources<i data-feather='chevron-down' class='w-4'></i></summary>
-            <div class='px-4 py-3 text-sm space-y-2'>
-              <div><span class='font-medium'>${c.DecisionMaker.Name}</span> · ${c.DecisionMaker.Title}</div>
-              <div class='flex gap-4'>
-                ${c.DecisionMaker.Phone?`<a href='tel:${c.DecisionMaker.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>Call</a>`:''}
-                ${c.DecisionMaker.Email?`<a href='mailto:${c.DecisionMaker.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>Email</a>`:''}
-                ${c.DecisionMaker.LinkedIn?`<a href='${c.DecisionMaker.LinkedIn}' target='_blank' class='underline flex items-center gap-1'><i data-feather='linkedin' class='w-4'></i>LinkedIn</a>`:''}
-              </div>
-              <div>Sources: ${getSrc(c).map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ') || 'n/a'}</div>
-            </div>
-          </details>`;
-        container.appendChild(card);
-      });
-      feather.replace();
-    }
+    // Helper ─ pick last URL as website, fallback blank
+    const lastUrl = arr => Array.isArray(arr) && arr.length ? arr[arr.length - 1] : '';
 
-    function renderTenders(){
-      const wrap=qs('#tenderList'); wrap.innerHTML='';
-      tenders.forEach(t=>{
-        const days=Math.ceil((new Date(t.CloseDate)-Date.now())/864e5);
-        const badge=days<=3?'bg-red-600':days<=10?'bg-amber-500':'bg-emerald-600';
-        const card=document.createElement('article'); card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
-        card.innerHTML=`
-          <h3 class='font-semibold mb-1'>${t.Title}</h3>
-          <div class='text-xs mb-2 opacity-70'>${t.Buyer}</div>
-          <div class='flex items-center gap-2 text-sm mb-3'>
-            <span class='px-2 py-0.5 rounded text-white ${badge}'>Closes ${t.CloseDate}</span>
-            <span class='opacity-80'>${t.Relevance||t.CategoryCode||''}</span>
-          </div>
-          <p class='text-sm mb-3'>${t.Description||''}</p>
-          <div class='flex gap-4'>
-            <a href='${t.Link||t.TenderLink}' target='_blank' class='underline flex items-center gap-1'><i data-feather='external-link' class='w-4'></i>Open</a>
-            <span class='text-xs'>Sources: ${(t.Sources||t.SourceURLs||[]).map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</span>
-          </div>`;
-        wrap.appendChild(card);
-      });
-      feather.replace();
-    }
+    // Build Clients table rows (strip personal contact fields)
+    const clientsRows = (data.NewPotentialClients || []).map(c => [
+      c.ProviderName,
+      c.Type,
+      c.Region,
+      c.EstimatedClientCount ?? '',
+      c.DecisionMaker?.Phone ?? '',
+      lastUrl(c.SourceURLs) ? `<a href="${lastUrl(c.SourceURLs)}" target="_blank">Website</a>` : ''
+    ]);
 
-    function renderOT(){
-      const grid=qs('#otGrid'); grid.innerHTML='';
-      ots.forEach(o=>{
-        const card=document.createElement('article'); card.className='rounded-lg shadow bg-white dark:bg-gray-800 p-4';
-        card.innerHTML=`
-          <h3 class='font-semibold mb-1'>${o.PracticeName}</h3>
-          <div class='text-xs mb-2 opacity-70'>${o.Region}</div>
-          <div class='text-sm mb-3'>OTs: <span class='font-medium'>${o.OTCount}</span></div>
-          <div class='flex flex-col gap-1 text-sm'>
-            ${o.Contact.Phone?`<a href='tel:${o.Contact.Phone.replace(/\s/g,'')}' class='underline flex items-center gap-1'><i data-feather='phone' class='w-4'></i>${o.Contact.Phone}</a>`:''}
-            ${o.Contact.Email?`<a href='mailto:${o.Contact.Email}' class='underline flex items-center gap-1'><i data-feather='mail' class='w-4'></i>${o.Contact.Email}</a>`:''}
-          </div>
-          <div class='mt-2 text-xs'>Sources: ${(o.Sources||o.SourceURLs||[]).map((u,i)=>`<a href='${u}' target='_blank' class='underline'>[${i+1}]</a>`).join(' ')||'n/a'}</div>`;
-        grid.appendChild(card);
-      });
-      feather.replace();
-    }
-
-    fetch('data.json').then(r=>r.json()).then(d=>{
-      clients=d.NewPotentialClients||[]; tenders=d.TenderOpportunities||[]; ots=d.OTPractices||[];
-      qs('#kpiClients').textContent=clients.length;
-      qs('#kpiOT').textContent=ots.length;
-      qs('#kpiTenders').textContent=tenders.filter(t=>((new Date(t.CloseDate)-Date.now())/864e5)<=14).length;
-
-      const regions=[...new Set(clients.flatMap(c=>c.Region.match(stateRegex)||[]))].sort();
-      const regionDiv=qs('#regionFilter'); regions.forEach(r=>{
-        const id=`rg_${r}`;
-        regionDiv.innerHTML+=`<label class='inline-flex items-center'><input type='checkbox' value='${r}' id='${id}' class='mr-2'>${r}</label><br>`;
-      });
-
-      renderClients(); renderTenders(); renderOT();
+    $('#clientsTable').DataTable({
+      data: clientsRows,
+      columns: [
+        { title: 'Provider' },
+        { title: 'Type' },
+        { title: 'Region' },
+        { title: 'Client Size' },
+        { title: 'Phone' },
+        { title: 'Website', orderable:false }
+      ],
+      pageLength: 25,
+      lengthMenu: [ [25, 50, -1], [25, 50, 'All'] ],
+      order: [[0, 'asc']],
+      responsive: true
     });
 
-    qsa('#regionFilter input, #typeFilter input').forEach(cb=>cb.addEventListener('change',renderClients));
-    qs('#searchBox').addEventListener('input',renderClients);
-    qs('#resetBtn').onclick=()=>{qsa('#regionFilter input:checked, #typeFilter input:checked').forEach(cb=>cb.checked=false); qs('#searchBox').value=''; renderClients();};
-    qs('#downloadPdf').classList.remove('hidden');
-    qs('#downloadPdf').onclick=()=>html2pdf().from(document.body).set({margin:0.2,filename:'IAM-Sentinel.pdf',html2canvas:{scale:2}}).save();
-  </script>
+    // Build Tenders table
+    const tenderRows = (data.TenderOpportunities || []).map(t => [
+      t.Title,
+      t.Buyer,
+      t.OpenDate,
+      t.CloseDate,
+      t.RelevanceCategory,
+      `<a href="${t.TenderLink}" target="_blank">Link</a>`
+    ]);
+
+    $('#tendersTable').DataTable({
+      data: tenderRows,
+      columns: [
+        { title: 'Title' },
+        { title: 'Buyer' },
+        { title: 'Open' },
+        { title: 'Close' },
+        { title: 'Category' },
+        { title: 'Docs', orderable:false }
+      ],
+      pageLength: 25,
+      order: [[2, 'desc']],
+      responsive: true
+    });
+
+    // Build OT Practices table
+    const otRows = (data.OTPractices || []).map(o => [
+      o.PracticeName,
+      o.Region,
+      o.OTStaffCount,
+      o.Contact?.Phone ?? '',
+      o.Contact?.LinkedIn ? `<a href="${o.Contact.LinkedIn}" target="_blank">LinkedIn</a>` : ''
+    ]);
+
+    $('#otTable').DataTable({
+      data: otRows,
+      columns: [
+        { title: 'Practice' },
+        { title: 'Region' },
+        { title: '# OTs' },
+        { title: 'Phone' },
+        { title: 'Profile', orderable:false }
+      ],
+      pageLength: 25,
+      order: [[0, 'asc']],
+      responsive: true
+    });
+  } catch (err) {
+    console.error(err);
+    alert('Failed to load or parse data.json — check console for details.');
+  }
+})();
+</script>
 </body>
 </html>
